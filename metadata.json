@@ -1,0 +1,6 @@
+{
+  "name": "Global Event & Holiday Countdown Lab",
+  "description": "Real-time global holiday and custom D-Day countdown lab with 20-language i18n, theme customization, and event sharing.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

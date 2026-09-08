@@ -1,0 +1,2522 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Global Event &amp; Holiday Countdown Lab</title>
+  <meta name="description" content="Track live real-time countdowns for global holidays, astronomical solstices, and custom personal D-Days with 20-language i18n support and instant sharing." />
+  <meta name="keywords" content="countdown, d-day, holidays, new year countdown, christmas countdown, solstices, event timer, countdown clock" />
+  <meta name="author" content="Global Countdown Lab" />
+  
+  <!-- Open Graph & Social Cards -->
+  <meta property="og:title" content="Global Event &amp; Holiday Countdown Lab" />
+  <meta property="og:description" content="Live precision countdowns for world holidays and personal D-Days. 20 languages, themes, and instant URL sharing." />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="/icon.svg" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Global Event &amp; Holiday Countdown Lab" />
+  <meta name="twitter:description" content="Precision real-time countdowns for global holidays and personal events." />
+  
+  <!-- PWA & Mobile Web Capabilities -->
+  <meta name="theme-color" content="#0f172a" id="meta-theme-color" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="CountdownLab" />
+  <link rel="manifest" href="/manifest.json" />
+  <link rel="icon" type="image/svg+xml" href="/icon.svg" />
+  <link rel="apple-touch-icon" href="/icon.svg" />
+
+  <!-- Schema.org JSON-LD -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Global Event & Holiday Countdown Lab",
+    "description": "Precision countdown tracker for international holidays, cultural festivals, and personal D-Day events.",
+    "applicationCategory": "UtilitiesApplication",
+    "operatingSystem": "All",
+    "inLanguage": ["en", "ko", "ja", "zh", "es", "fr", "de", "pt", "ru", "it", "vi", "th", "id", "tr", "pl", "nl", "ar", "hi", "sv", "uk"],
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
+  }
+  </script>
+
+  <!-- Tailwind CSS via CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
+            mono: ['ui-monospace', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', 'monospace']
+          },
+          colors: {
+            brand: {
+              50: '#f0f9ff',
+              400: '#38bdf8',
+              500: '#0284c7',
+              600: '#0369a1',
+            }
+          }
+        }
+      }
+    };
+  </script>
+
+  <style>
+    /* Theme color variables */
+    :root {
+      --bg-main: #0b0f19;
+      --card-bg: rgba(17, 24, 39, 0.85);
+      --card-border: rgba(55, 65, 81, 0.6);
+      --accent-color: #38bdf8;
+      --text-main: #f3f4f6;
+      --text-muted: #9ca3af;
+    }
+    html.theme-light {
+      --bg-main: #f8fafc;
+      --card-bg: rgba(255, 255, 255, 0.95);
+      --card-border: rgba(226, 232, 240, 0.9);
+      --accent-color: #0284c7;
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+    }
+    html.theme-aurora {
+      --bg-main: #060b18;
+      --card-bg: rgba(13, 22, 45, 0.85);
+      --card-border: rgba(16, 185, 129, 0.35);
+      --accent-color: #10b981;
+      --text-main: #f0fdf4;
+      --text-muted: #94a3b8;
+    }
+    html.theme-holiday {
+      --bg-main: #140507;
+      --card-bg: rgba(36, 10, 16, 0.85);
+      --card-border: rgba(239, 68, 68, 0.35);
+      --accent-color: #f59e0b;
+      --text-main: #fef2f2;
+      --text-muted: #fca5a5;
+    }
+    html.theme-cyberpunk {
+      --bg-main: #09090b;
+      --card-bg: rgba(24, 24, 27, 0.9);
+      --card-border: rgba(6, 182, 212, 0.45);
+      --accent-color: #06b6d4;
+      --text-main: #fafafa;
+      --text-muted: #a1a1aa;
+    }
+    html.theme-sunset {
+      --bg-main: #170b05;
+      --card-bg: rgba(43, 20, 11, 0.85);
+      --card-border: rgba(249, 115, 22, 0.35);
+      --accent-color: #f97316;
+      --text-main: #fff7ed;
+      --text-muted: #fdba74;
+    }
+    body {
+      background-color: var(--bg-main);
+      color: var(--text-main);
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+    .card-theme {
+      background-color: var(--card-bg);
+      border-color: var(--card-border);
+      backdrop-filter: blur(12px);
+    }
+    .tabular-nums { font-variant-numeric: tabular-nums; }
+    /* Scrollbar */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: rgba(156, 163, 175, 0.3); border-radius: 9999px; }
+    ::-webkit-scrollbar-thumb:hover { background: rgba(156, 163, 175, 0.5); }
+    /* Pulse glow */
+    @keyframes pulseGlow {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.6; transform: scale(0.96); }
+    }
+    .pulse-dot { animation: pulseGlow 2s infinite ease-in-out; }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col selection:bg-sky-500 selection:text-white">
+
+  <!-- Confetti Canvas -->
+  <canvas id="confetti-canvas" class="fixed inset-0 pointer-events-none z-50 w-full h-full"></canvas>
+
+  <!-- Toast Container -->
+  <div id="toast-container" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2 pointer-events-none max-w-sm w-full px-4" aria-live="polite"></div>
+
+  <!-- Shared Event Banner (Dynamic) -->
+  <div id="shared-banner" class="hidden bg-gradient-to-r from-sky-600 to-indigo-600 text-white px-4 py-3 shadow-lg transition-all">
+    <div class="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3 text-sm">
+      <div class="flex items-center gap-2">
+        <span class="text-xl">🎉</span>
+        <div>
+          <span class="font-bold" id="shared-banner-title">Shared Countdown</span>
+          <span class="opacity-90 ml-1" id="shared-banner-desc">has been loaded from your link!</span>
+        </div>
+      </div>
+      <div class="flex items-center gap-2">
+        <button id="shared-banner-save" class="bg-white text-slate-900 px-3 py-1.5 rounded-lg font-semibold hover:bg-slate-100 transition shadow-sm text-xs">
+          Save to My Countdowns
+        </button>
+        <button id="shared-banner-close" class="text-white hover:text-slate-200 p-1">✕</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main App Header / Top Bar -->
+  <header class="sticky top-0 z-30 card-theme border-b shadow-sm">
+    <div class="max-w-6xl mx-auto px-4 py-3 flex flex-wrap items-center justify-between gap-3">
+      
+      <!-- Brand Logo & Title -->
+      <div class="flex items-center gap-3 cursor-pointer" onclick="scrollToTop()">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-sky-500 to-indigo-600 flex items-center justify-center shadow-md shadow-sky-500/20 text-white font-black text-lg">
+          ⏳
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <h1 class="font-extrabold text-base sm:text-lg tracking-tight flex items-center gap-1.5" id="txt-app-title">
+              Countdown Lab
+            </h1>
+            <span class="pulse-dot inline-block w-2 h-2 rounded-full bg-emerald-400" title="Live Clock Sync Active"></span>
+          </div>
+          <p class="text-[11px] text-gray-400 font-medium" id="txt-app-subtitle">Global Event &amp; Holiday Tracker</p>
+        </div>
+      </div>
+
+      <!-- Actions: Search, i18n, Theme, View & Add -->
+      <div class="flex items-center gap-2 flex-wrap sm:flex-nowrap">
+        
+        <!-- Language Selector Dropdown (20 Languages) -->
+        <div class="relative">
+          <label for="lang-select" class="sr-only">Language</label>
+          <div class="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl border border-gray-700/60 bg-gray-800/40 text-xs font-medium hover:border-gray-600 transition">
+            <span>🌐</span>
+            <select id="lang-select" class="bg-transparent text-xs outline-none cursor-pointer pr-1" aria-label="Select Language">
+              <option value="en">English (US)</option>
+              <option value="ko">한국어 (Korean)</option>
+              <option value="ja">日本語 (Japanese)</option>
+              <option value="zh">简体中文 (Chinese)</option>
+              <option value="es">Español (Spanish)</option>
+              <option value="fr">Français (French)</option>
+              <option value="de">Deutsch (German)</option>
+              <option value="pt">Português (Portuguese)</option>
+              <option value="ru">Русский (Russian)</option>
+              <option value="it">Italiano (Italian)</option>
+              <option value="vi">Tiếng Việt (Vietnamese)</option>
+              <option value="th">ไทย (Thai)</option>
+              <option value="id">Bahasa Indonesia</option>
+              <option value="tr">Türkçe (Turkish)</option>
+              <option value="pl">Polski (Polish)</option>
+              <option value="nl">Nederlands (Dutch)</option>
+              <option value="ar">العربية (Arabic)</option>
+              <option value="hi">हिन्दी (Hindi)</option>
+              <option value="sv">Svenska (Swedish)</option>
+              <option value="uk">Українська (Ukrainian)</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Theme Toggle Dropdown -->
+        <div class="relative">
+          <label for="theme-select" class="sr-only">Theme</label>
+          <div class="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl border border-gray-700/60 bg-gray-800/40 text-xs font-medium hover:border-gray-600 transition">
+            <span id="theme-icon">🌙</span>
+            <select id="theme-select" class="bg-transparent text-xs outline-none cursor-pointer pr-1" aria-label="Select Theme">
+              <option value="dark">Dark Slate</option>
+              <option value="light">Light Crisp</option>
+              <option value="aurora">Midnight Aurora</option>
+              <option value="holiday">Holiday Sparkle</option>
+              <option value="cyberpunk">Cyberpunk Neon</option>
+              <option value="sunset">Golden Sunset</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- PWA Install Button (Dynamic) -->
+        <button id="pwa-install-btn" class="hidden items-center gap-1.5 bg-emerald-600 hover:bg-emerald-500 text-white px-3 py-1.5 rounded-xl text-xs font-medium transition shadow-sm">
+          <span>📲</span>
+          <span id="txt-btn-install">Install</span>
+        </button>
+
+        <!-- Add Event Button -->
+        <button id="btn-open-create-modal" class="flex items-center gap-1.5 bg-sky-500 hover:bg-sky-400 active:scale-95 text-slate-950 font-bold px-3.5 py-1.5 rounded-xl text-xs transition shadow-md shadow-sky-500/20">
+          <span>+</span>
+          <span id="txt-btn-create">New Countdown</span>
+        </button>
+
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero & Filter Ribbon -->
+  <section class="max-w-6xl mx-auto px-4 pt-6 pb-2 w-full">
+    <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+      
+      <!-- Live Clock & Date readout -->
+      <div>
+        <div class="text-xs uppercase tracking-widest text-sky-400 font-semibold mb-1" id="txt-current-time-label">Current Synchronized Time</div>
+        <div class="text-2xl sm:text-3xl font-extrabold tracking-tight tabular-nums flex items-baseline gap-2">
+          <span id="hero-live-clock">--:--:--</span>
+          <span id="hero-live-date" class="text-xs sm:text-sm font-medium text-gray-400">Loading...</span>
+        </div>
+      </div>
+
+      <!-- Quick Toolbar: Search, View Mode, Export/Import, Help -->
+      <div class="flex items-center gap-2 flex-wrap w-full md:w-auto">
+        <!-- Search -->
+        <div class="relative flex-1 sm:w-64">
+          <input type="text" id="event-search-input" placeholder="Search event or holiday... (/)" 
+            class="w-full bg-gray-800/50 border border-gray-700/70 rounded-xl px-3.5 py-1.5 text-xs text-gray-100 placeholder-gray-500 focus:outline-none focus:border-sky-400 transition" />
+          <span class="absolute right-3 top-2 text-xs text-gray-500 pointer-events-none">🔍</span>
+        </div>
+
+        <!-- View Toggle (Grid / Compact) -->
+        <button id="btn-toggle-view" class="p-2 rounded-xl border border-gray-700/60 bg-gray-800/40 hover:bg-gray-700/50 text-gray-300 text-xs transition" title="Toggle Grid / Compact View (V)">
+          <span id="view-mode-icon">⊞</span>
+        </button>
+
+        <!-- Export / Import Presets -->
+        <button id="btn-open-export-modal" class="flex items-center gap-1 px-3 py-1.5 rounded-xl border border-gray-700/60 bg-gray-800/40 hover:bg-gray-700/50 text-gray-300 text-xs font-medium transition" title="Export &amp; Import JSON Presets">
+          <span>⇄</span>
+          <span id="txt-btn-backup">Backup</span>
+        </button>
+
+        <!-- Confetti Trigger -->
+        <button onclick="fireConfetti()" class="p-2 rounded-xl border border-gray-700/60 bg-gray-800/40 hover:bg-gray-700/50 text-amber-300 text-xs transition" title="Celebrate! Trigger Confetti">
+          ✨
+        </button>
+
+        <!-- Keyboard Shortcuts Help -->
+        <button id="btn-shortcuts-help" class="p-2 rounded-xl border border-gray-700/60 bg-gray-800/40 hover:bg-gray-700/50 text-gray-400 text-xs transition font-mono" title="Keyboard Shortcuts (?)">
+          ?
+        </button>
+      </div>
+
+    </div>
+
+    <!-- Category Tabs Filter -->
+    <div class="flex items-center gap-2 overflow-x-auto py-4 no-scrollbar">
+      <button class="filter-tab px-3 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition bg-sky-500 text-slate-950 shadow-sm" data-category="all" id="tab-all">
+        All Countdowns (<span id="count-all">0</span>)
+      </button>
+      <button class="filter-tab px-3 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition bg-gray-800/60 text-gray-300 hover:bg-gray-700/60" data-category="favorites" id="tab-favorites">
+        ⭐ Favorites (<span id="count-favs">0</span>)
+      </button>
+      <button class="filter-tab px-3 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition bg-gray-800/60 text-gray-300 hover:bg-gray-700/60" data-category="custom" id="tab-custom">
+        👤 My D-Days (<span id="count-custom">0</span>)
+      </button>
+      <button class="filter-tab px-3 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition bg-gray-800/60 text-gray-300 hover:bg-gray-700/60" data-category="holiday" id="tab-holiday">
+        🎉 Global Holidays (<span id="count-holiday">0</span>)
+      </button>
+      <button class="filter-tab px-3 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition bg-gray-800/60 text-gray-300 hover:bg-gray-700/60" data-category="astronomy" id="tab-astronomy">
+        🌌 Solstices &amp; Nature (<span id="count-astronomy">0</span>)
+      </button>
+    </div>
+  </section>
+
+  <!-- AD SLOT -->
+  <section id="ad-slot-section" class="max-w-6xl mx-auto px-4 my-2 w-full" aria-label="Sponsorship">
+    <div class="h-[90px] w-full rounded-2xl border border-dashed border-gray-700/60 card-theme flex flex-col sm:flex-row items-center justify-between px-6 py-2 transition-all">
+      <div class="flex items-center gap-3">
+        <span class="text-[10px] uppercase font-bold tracking-widest px-2 py-0.5 rounded bg-gray-800 text-gray-400 border border-gray-700">AD SLOT</span>
+        <div class="text-xs text-gray-400 font-medium">
+          <span class="text-gray-200 font-semibold" id="txt-ad-title">Responsive Leaderboard Banner Space</span> • 728x90 Desktop / 320x50 Mobile Ready
+        </div>
+      </div>
+      <div class="text-[11px] text-gray-500 mt-1 sm:mt-0 flex items-center gap-2">
+        <span id="txt-ad-status">Pre-allocated for Google AdSense / Sponsor Network</span>
+        <button onclick="toggleAdPlaceholder()" class="text-xs text-sky-400 hover:underline">Toggle</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Main Countdown Grid View -->
+  <main class="max-w-6xl mx-auto px-4 py-4 flex-1 w-full">
+    
+    <!-- Empty State -->
+    <div id="empty-state" class="hidden text-center py-16 px-4">
+      <div class="text-5xl mb-3">🗓️</div>
+      <h3 class="text-lg font-bold text-gray-200" id="txt-empty-title">No Countdowns Found</h3>
+      <p class="text-xs text-gray-400 max-w-sm mx-auto mt-1" id="txt-empty-desc">Try changing your search keywords or create a new personal countdown.</p>
+      <button onclick="openCreateModal()" class="mt-4 bg-sky-500 text-slate-950 font-bold px-4 py-2 rounded-xl text-xs shadow-md">
+        + Create Personal Countdown
+      </button>
+    </div>
+
+    <!-- Cards Container (Grid / Compact) -->
+    <div id="countdown-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      <!-- Dynamically Rendered Countdown Cards -->
+    </div>
+  </main>
+
+  <!-- Footer Layout (Analytics & Feedback Ready) -->
+  <footer class="card-theme border-t mt-12 py-8 text-xs text-gray-400">
+    <div class="max-w-6xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-left">
+      <div>
+        <div class="font-bold text-gray-200 flex items-center justify-center sm:justify-start gap-2">
+          <span>⏳ Global Event &amp; Holiday Countdown Lab</span>
+          <span class="px-2 py-0.5 rounded-full text-[10px] bg-sky-950 text-sky-400 border border-sky-800">v2.4 Production</span>
+        </div>
+        <p class="text-gray-500 mt-1">Zero-dependency, zero-build real-time countdown suite. Works 100% offline.</p>
+      </div>
+
+      <div class="flex items-center gap-4 flex-wrap justify-center text-xs">
+        <div class="flex items-center gap-1.5 bg-gray-800/60 px-3 py-1.5 rounded-xl border border-gray-700/60">
+          <span>🕒 Local:</span>
+          <span id="footer-tz-display" class="font-mono text-gray-300 font-semibold">UTC</span>
+        </div>
+        <button onclick="openFeedbackModal()" class="text-sky-400 hover:underline">Feedback &amp; Support</button>
+        <button onclick="resetToDefaults()" class="text-gray-500 hover:text-red-400 transition">Reset All Data</button>
+      </div>
+    </div>
+  </footer>
+
+  <!-- MODAL: Add / Edit Custom Event -->
+  <div id="modal-event" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm hidden items-center justify-center p-4">
+    <div class="card-theme border rounded-2xl w-full max-w-md shadow-2xl p-6 text-left relative transform transition-all scale-100">
+      <div class="flex items-center justify-between mb-4">
+        <h2 class="text-base font-bold text-gray-100" id="modal-event-heading">Create Custom D-Day</h2>
+        <button onclick="closeModal('modal-event')" class="text-gray-400 hover:text-white p-1 rounded-lg">✕</button>
+      </div>
+
+      <form id="form-event" onsubmit="saveCustomEvent(event)" class="space-y-4">
+        <input type="hidden" id="form-event-id" value="" />
+        
+        <div>
+          <label for="event-title" class="block text-xs font-semibold text-gray-300 mb-1" id="txt-lbl-title">Event Title *</label>
+          <input type="text" id="event-title" required placeholder="e.g., Trip to Tokyo, Final Exam, Wedding..."
+            class="w-full bg-gray-900 border border-gray-700 rounded-xl px-3 py-2 text-xs text-white placeholder-gray-500 focus:outline-none focus:border-sky-400" />
+        </div>
+
+        <div>
+          <label for="event-datetime" class="block text-xs font-semibold text-gray-300 mb-1" id="txt-lbl-date">Target Date &amp; Time *</label>
+          <input type="datetime-local" id="event-datetime" required
+            class="w-full bg-gray-900 border border-gray-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-sky-400" />
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label for="event-category" class="block text-xs font-semibold text-gray-300 mb-1" id="txt-lbl-cat">Category</label>
+            <select id="event-category" class="w-full bg-gray-900 border border-gray-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-sky-400">
+              <option value="custom">Personal D-Day</option>
+              <option value="celebration">Celebration / Party</option>
+              <option value="travel">Travel &amp; Trip</option>
+              <option value="exam">Exam &amp; Study</option>
+              <option value="milestone">Milestone &amp; Goal</option>
+              <option value="work">Work &amp; Project</option>
+            </select>
+          </div>
+
+          <div>
+            <label for="event-color" class="block text-xs font-semibold text-gray-300 mb-1" id="txt-lbl-color">Color Accent</label>
+            <select id="event-color" class="w-full bg-gray-900 border border-gray-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-sky-400">
+              <option value="sky">Sky Blue</option>
+              <option value="emerald">Emerald Green</option>
+              <option value="rose">Rose Red</option>
+              <option value="amber">Warm Amber</option>
+              <option value="violet">Cosmic Violet</option>
+              <option value="fuchsia">Neon Fuchsia</option>
+            </select>
+          </div>
+        </div>
+
+        <div>
+          <label for="event-notes" class="block text-xs font-semibold text-gray-300 mb-1" id="txt-lbl-notes">Notes / Location (Optional)</label>
+          <textarea id="event-notes" rows="2" placeholder="Add specific notes, checklist, or location..."
+            class="w-full bg-gray-900 border border-gray-700 rounded-xl px-3 py-2 text-xs text-white placeholder-gray-500 focus:outline-none focus:border-sky-400"></textarea>
+        </div>
+
+        <div class="flex items-center gap-2 pt-1">
+          <input type="checkbox" id="event-recurring" class="rounded bg-gray-900 border-gray-700 text-sky-500 focus:ring-0" />
+          <label for="event-recurring" class="text-xs text-gray-300 cursor-pointer" id="txt-lbl-recurring">Recur Annually (Yearly Anniversary)</label>
+        </div>
+
+        <div class="flex items-center justify-end gap-2 pt-3 border-t border-gray-800">
+          <button type="button" onclick="closeModal('modal-event')" class="px-3.5 py-2 rounded-xl text-xs font-medium text-gray-400 hover:bg-gray-800">
+            Cancel
+          </button>
+          <button type="submit" class="bg-sky-500 hover:bg-sky-400 text-slate-950 font-bold px-4 py-2 rounded-xl text-xs shadow-md">
+            Save Countdown
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL: Export & Import JSON Presets -->
+  <div id="modal-export" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm hidden items-center justify-center p-4">
+    <div class="card-theme border rounded-2xl w-full max-w-lg shadow-2xl p-6 text-left relative max-h-[90vh] flex flex-col">
+      <div class="flex items-center justify-between pb-3 border-b border-gray-800">
+        <h2 class="text-base font-bold text-gray-100">Export &amp; Import Event Presets (JSON)</h2>
+        <button onclick="closeModal('modal-export')" class="text-gray-400 hover:text-white p-1 rounded-lg">✕</button>
+      </div>
+
+      <div class="py-4 space-y-4 overflow-y-auto flex-1">
+        
+        <!-- Preset Quick Loaders -->
+        <div>
+          <label class="block text-xs font-semibold text-gray-300 mb-1.5">Load Curated Preset Packs</label>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
+            <button onclick="loadCuratedPreset('space')" class="p-2.5 rounded-xl border border-gray-700 bg-gray-800/50 hover:bg-gray-700/60 text-left text-xs transition">
+              <div class="font-bold text-sky-400">🚀 Cosmic Space</div>
+              <div class="text-[10px] text-gray-400">Halley's Comet, Eclipses, Mars</div>
+            </button>
+            <button onclick="loadCuratedPreset('sports')" class="p-2.5 rounded-xl border border-gray-700 bg-gray-800/50 hover:bg-gray-700/60 text-left text-xs transition">
+              <div class="font-bold text-emerald-400">🏆 Global Sports</div>
+              <div class="text-[10px] text-gray-400">World Cup 2026, Olympics</div>
+            </button>
+            <button onclick="loadCuratedPreset('goals')" class="p-2.5 rounded-xl border border-gray-700 bg-gray-800/50 hover:bg-gray-700/60 text-left text-xs transition">
+              <div class="font-bold text-amber-400">🎯 Life Goals</div>
+              <div class="text-[10px] text-gray-400">Exams, Savings, Vacation</div>
+            </button>
+          </div>
+        </div>
+
+        <!-- JSON Data Area -->
+        <div>
+          <div class="flex items-center justify-between mb-1">
+            <label for="json-data-area" class="text-xs font-semibold text-gray-300">Custom Events JSON</label>
+            <div class="flex gap-2">
+              <button onclick="copyExportJson()" class="text-xs text-sky-400 hover:underline">Copy JSON</button>
+              <button onclick="downloadJsonFile()" class="text-xs text-emerald-400 hover:underline">Download File</button>
+            </div>
+          </div>
+          <textarea id="json-data-area" rows="6" 
+            class="w-full font-mono bg-gray-900 border border-gray-700 rounded-xl p-3 text-[11px] text-gray-200 focus:outline-none focus:border-sky-400"
+            placeholder="Paste exported JSON string here to import..."></textarea>
+        </div>
+
+        <div class="flex items-center justify-between text-xs pt-1">
+          <label class="flex items-center gap-2 cursor-pointer text-gray-300">
+            <input type="checkbox" id="import-merge-mode" checked class="rounded bg-gray-900 border-gray-700 text-sky-500" />
+            <span>Merge with existing (keep current custom events)</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="flex items-center justify-end gap-2 pt-3 border-t border-gray-800">
+        <button onclick="closeModal('modal-export')" class="px-3.5 py-2 rounded-xl text-xs font-medium text-gray-400 hover:bg-gray-800">
+          Close
+        </button>
+        <button onclick="importJsonData()" class="bg-sky-500 hover:bg-sky-400 text-slate-950 font-bold px-4 py-2 rounded-xl text-xs shadow-md">
+          Import JSON
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: Feedback & Support -->
+  <div id="modal-feedback" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm hidden items-center justify-center p-4">
+    <div class="card-theme border rounded-2xl w-full max-w-md shadow-2xl p-6 text-left relative">
+      <div class="flex items-center justify-between mb-3">
+        <h2 class="text-base font-bold text-gray-100">Feedback &amp; Global Support</h2>
+        <button onclick="closeModal('modal-feedback')" class="text-gray-400 hover:text-white p-1 rounded-lg">✕</button>
+      </div>
+      <p class="text-xs text-gray-400 mb-4">Have a holiday suggestion, translation fix, or feature request? We would love to hear from you.</p>
+      
+      <form onsubmit="submitFeedback(event)" class="space-y-3">
+        <div>
+          <label for="fb-type" class="block text-xs font-semibold text-gray-300 mb-1">Feedback Type</label>
+          <select id="fb-type" class="w-full bg-gray-900 border border-gray-700 rounded-xl px-3 py-2 text-xs text-white">
+            <option value="holiday">Suggest a Global Holiday</option>
+            <option value="bug">Report an Issue / Timezone bug</option>
+            <option value="translation">Translation / i18n Improvement</option>
+            <option value="feature">General Feature Idea</option>
+          </select>
+        </div>
+        <div>
+          <label for="fb-comment" class="block text-xs font-semibold text-gray-300 mb-1">Message</label>
+          <textarea id="fb-comment" rows="3" required placeholder="Tell us your thoughts or the holiday details..."
+            class="w-full bg-gray-900 border border-gray-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-sky-400"></textarea>
+        </div>
+        <div class="flex justify-end gap-2 pt-2">
+          <button type="button" onclick="closeModal('modal-feedback')" class="px-3 py-1.5 rounded-xl text-xs text-gray-400 hover:bg-gray-800">Close</button>
+          <button type="submit" class="bg-sky-500 hover:bg-sky-400 text-slate-950 font-bold px-4 py-1.5 rounded-xl text-xs shadow-md">Send Feedback</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL: Keyboard Shortcuts Help -->
+  <div id="modal-shortcuts" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm hidden items-center justify-center p-4">
+    <div class="card-theme border rounded-2xl w-full max-w-sm shadow-2xl p-6 text-left relative">
+      <div class="flex items-center justify-between mb-4">
+        <h2 class="text-base font-bold text-gray-100">Keyboard Shortcuts</h2>
+        <button onclick="closeModal('modal-shortcuts')" class="text-gray-400 hover:text-white p-1 rounded-lg">✕</button>
+      </div>
+      <div class="space-y-2 text-xs">
+        <div class="flex justify-between items-center py-1 border-b border-gray-800">
+          <span class="text-gray-400">New Countdown</span>
+          <kbd class="px-2 py-0.5 rounded bg-gray-800 border border-gray-700 text-sky-400 font-mono">N</kbd>
+        </div>
+        <div class="flex justify-between items-center py-1 border-b border-gray-800">
+          <span class="text-gray-400">Focus Search Bar</span>
+          <kbd class="px-2 py-0.5 rounded bg-gray-800 border border-gray-700 text-sky-400 font-mono">/</kbd>
+        </div>
+        <div class="flex justify-between items-center py-1 border-b border-gray-800">
+          <span class="text-gray-400">Cycle Color Theme</span>
+          <kbd class="px-2 py-0.5 rounded bg-gray-800 border border-gray-700 text-sky-400 font-mono">T</kbd>
+        </div>
+        <div class="flex justify-between items-center py-1 border-b border-gray-800">
+          <span class="text-gray-400">Cycle View Mode</span>
+          <kbd class="px-2 py-0.5 rounded bg-gray-800 border border-gray-700 text-sky-400 font-mono">V</kbd>
+        </div>
+        <div class="flex justify-between items-center py-1 border-b border-gray-800">
+          <span class="text-gray-400">Trigger Confetti</span>
+          <kbd class="px-2 py-0.5 rounded bg-gray-800 border border-gray-700 text-sky-400 font-mono">C</kbd>
+        </div>
+        <div class="flex justify-between items-center py-1">
+          <span class="text-gray-400">Close Any Modal</span>
+          <kbd class="px-2 py-0.5 rounded bg-gray-800 border border-gray-700 text-sky-400 font-mono">ESC</kbd>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Pure Vanilla JavaScript Core Engine -->
+  <script>
+    /* ==========================================================================
+       1. 20-LANGUAGE I18N DICTIONARY & TRANSLATION ENGINE
+       ========================================================================== */
+    const I18N = {
+      en: {
+        appTitle: "Countdown Lab",
+        appSubtitle: "Global Event & Holiday Tracker",
+        currentTime: "Current Synchronized Time",
+        btnCreate: "New Countdown",
+        btnInstall: "Install",
+        btnBackup: "Backup",
+        all: "All",
+        favorites: "Favorites",
+        custom: "My D-Days",
+        holidays: "Global Holidays",
+        astronomy: "Solstices & Nature",
+        searchPlaceholder: "Search event or holiday... (/)",
+        days: "Days",
+        hours: "Hours",
+        mins: "Mins",
+        secs: "Secs",
+        ms: "ms",
+        remaining: "Remaining",
+        passed: "Elapsed",
+        today: "TODAY IS THE DAY! 🎉",
+        dDay: "D-Day",
+        share: "Share",
+        copyStats: "Copy",
+        icsCalendar: ".ICS Calendar",
+        edit: "Edit",
+        delete: "Delete",
+        shareSuccess: "Share link copied to clipboard!",
+        summaryCopied: "Countdown summary copied!",
+        calendarDownloaded: "iCalendar (.ics) file downloaded!",
+        eventSaved: "Event successfully saved!",
+        eventDeleted: "Event deleted.",
+        emptyTitle: "No Countdowns Found",
+        emptyDesc: "Try adjusting your search or add a new custom D-Day event."
+      },
+      ko: {
+        appTitle: "글로벌 카운트다운 랩",
+        appSubtitle: "글로벌 공휴일 & 나만의 D-Day 타이머",
+        currentTime: "현재 실시간 표준 시각",
+        btnCreate: "새 카운트다운",
+        btnInstall: "앱 설치",
+        btnBackup: "백업/복원",
+        all: "전체",
+        favorites: "즐겨찾기",
+        custom: "내 D-Day",
+        holidays: "세계 공휴일",
+        astronomy: "절기 및 천문",
+        searchPlaceholder: "이벤트 및 공휴일 검색... (/)",
+        days: "일",
+        hours: "시간",
+        mins: "분",
+        secs: "초",
+        ms: "밀리초",
+        remaining: "남음",
+        passed: "지남",
+        today: "오늘이 바로 그날입니다! 🎉",
+        dDay: "디데이",
+        share: "공유",
+        copyStats: "복사",
+        icsCalendar: "캘린더 저장",
+        edit: "수정",
+        delete: "삭제",
+        shareSuccess: "공유 링크가 복사되었습니다!",
+        summaryCopied: "카운트다운 요약이 복사되었습니다!",
+        calendarDownloaded: ".ics 캘린더 파일이 다운로드되었습니다!",
+        eventSaved: "이벤트가 저장되었습니다!",
+        eventDeleted: "이벤트가 삭제되었습니다.",
+        emptyTitle: "등록된 카운트다운이 없습니다",
+        emptyDesc: "검색어를 확인하거나 새로운 D-Day를 생성해 보세요."
+      },
+      ja: {
+        appTitle: "カウントダウン・ラボ",
+        appSubtitle: "世界の祝日＆パーソナルD-Dayタイマー",
+        currentTime: "現在時刻（リアルタイム同期）",
+        btnCreate: "新規作成",
+        btnInstall: "インストール",
+        btnBackup: "バックアップ",
+        all: "すべて",
+        favorites: "お気に入り",
+        custom: "マイスケジュール",
+        holidays: "世界の祝日",
+        astronomy: "至点・自然",
+        searchPlaceholder: "イベントや祝日を検索... (/)",
+        days: "日",
+        hours: "時間",
+        mins: "分",
+        secs: "秒",
+        ms: "ミリ秒",
+        remaining: "残り",
+        passed: "経過",
+        today: "本日がその日です！🎉",
+        dDay: "D-Day",
+        share: "共有",
+        copyStats: "コピー",
+        icsCalendar: "カレンダー追加",
+        edit: "編集",
+        delete: "削除",
+        shareSuccess: "共有リンクをコピーしました！",
+        summaryCopied: "カウントダウン情報をコピーしました！",
+        calendarDownloaded: "iCalendarファイルをダウンロードしました！",
+        eventSaved: "イベントを保存しました！",
+        eventDeleted: "イベントを削除しました。",
+        emptyTitle: "カウントダウンが見つかりません",
+        emptyDesc: "検索条件を変更するか、新しい予定を追加してください。"
+      },
+      zh: {
+        appTitle: "全球倒计时实验室",
+        appSubtitle: "国际重大节日与个人D-Day倒数计时",
+        currentTime: "当前精确标准时间",
+        btnCreate: "新建倒计时",
+        btnInstall: "安装应用",
+        btnBackup: "备份与导入",
+        all: "全部",
+        favorites: "收藏夹",
+        custom: "我的D-Day",
+        holidays: "国际节日",
+        astronomy: "节气与天文",
+        searchPlaceholder: "搜索节日或事件... (/)",
+        days: "天",
+        hours: "时",
+        mins: "分",
+        secs: "秒",
+        ms: "毫秒",
+        remaining: "剩余",
+        passed: "已过去",
+        today: "就是今天！🎉",
+        dDay: "倒计时",
+        share: "分享",
+        copyStats: "复制",
+        icsCalendar: "导出日历",
+        edit: "编辑",
+        delete: "删除",
+        shareSuccess: "分享链接已复制到剪贴板！",
+        summaryCopied: "倒计时摘要已复制！",
+        calendarDownloaded: "日历文件已成功下载！",
+        eventSaved: "事件已保存！",
+        eventDeleted: "事件已删除。",
+        emptyTitle: "未找到倒计时",
+        emptyDesc: "尝试更改搜索关键词或创建属于您的新事件。"
+      },
+      es: {
+        appTitle: "Laboratorio de Cuenta Regresiva",
+        appSubtitle: "Festivos Mundiales y D-Days Personalizados",
+        currentTime: "Hora Sincronizada Actual",
+        btnCreate: "Nueva Cuenta",
+        btnInstall: "Instalar",
+        btnBackup: "Copia de Seguridad",
+        all: "Todos",
+        favorites: "Favoritos",
+        custom: "Mis D-Days",
+        holidays: "Festivos Globales",
+        astronomy: "Solsticios y Naturaleza",
+        searchPlaceholder: "Buscar evento o festivo... (/)",
+        days: "Días",
+        hours: "Horas",
+        mins: "Min",
+        secs: "Seg",
+        ms: "ms",
+        remaining: "Restante",
+        passed: "Transcurrido",
+        today: "¡HOY ES EL DÍA! 🎉",
+        dDay: "Día D",
+        share: "Compartir",
+        copyStats: "Copiar",
+        icsCalendar: "Calendario .ICS",
+        edit: "Editar",
+        delete: "Eliminar",
+        shareSuccess: "¡Enlace copiado al portapapeles!",
+        summaryCopied: "¡Resumen copiado!",
+        calendarDownloaded: "¡Archivo .ics descargado!",
+        eventSaved: "¡Evento guardado con éxito!",
+        eventDeleted: "Evento eliminado.",
+        emptyTitle: "No se encontraron cuentas regresivas",
+        emptyDesc: "Intente modificar su búsqueda o cree un nuevo evento personal."
+      },
+      fr: {
+        appTitle: "Laboratoire Compte à Rebours",
+        appSubtitle: "Fêtes Mondiales & Jours J Personnalisés",
+        currentTime: "Heure Actuelle Synchronisée",
+        btnCreate: "Nouveau Compte",
+        btnInstall: "Installer",
+        btnBackup: "Sauvegarde",
+        all: "Tous",
+        favorites: "Favoris",
+        custom: "Mes Jours J",
+        holidays: "Fêtes Mondiales",
+        astronomy: "Solstices & Nature",
+        searchPlaceholder: "Rechercher un événement... (/)",
+        days: "Jours",
+        hours: "Heures",
+        mins: "Min",
+        secs: "Sec",
+        ms: "ms",
+        remaining: "Restant",
+        passed: "Écoulé",
+        today: "C'EST AUJOURD'HUI ! 🎉",
+        dDay: "Jour J",
+        share: "Partager",
+        copyStats: "Copier",
+        icsCalendar: "Calendrier .ICS",
+        edit: "Modifier",
+        delete: "Supprimer",
+        shareSuccess: "Lien de partage copié !",
+        summaryCopied: "Résumé copié !",
+        calendarDownloaded: "Fichier de calendrier téléchargé !",
+        eventSaved: "Événement enregistré !",
+        eventDeleted: "Événement supprimé.",
+        emptyTitle: "Aucun compte à rebours trouvé",
+        emptyDesc: "Ajustez vos filtres ou ajoutez un nouveau compte à rebours."
+      },
+      de: {
+        appTitle: "Countdown-Labor",
+        appSubtitle: "Globale Feiertage & Persönliche D-Days",
+        currentTime: "Aktuelle Synchronisierte Zeit",
+        btnCreate: "Neuer Countdown",
+        btnInstall: "Installieren",
+        btnBackup: "Backup",
+        all: "Alle",
+        favorites: "Favoriten",
+        custom: "Meine D-Days",
+        holidays: "Globale Feiertage",
+        astronomy: "Sonnenwenden & Natur",
+        searchPlaceholder: "Ereignis suchen... (/)",
+        days: "Tage",
+        hours: "Std",
+        mins: "Min",
+        secs: "Sek",
+        ms: "ms",
+        remaining: "Verbleibend",
+        passed: "Vergangen",
+        today: "HEUTE IST DER TAG! 🎉",
+        dDay: "D-Day",
+        share: "Teilen",
+        copyStats: "Kopieren",
+        icsCalendar: "Kalender .ICS",
+        edit: "Bearbeiten",
+        delete: "Löschen",
+        shareSuccess: "Link in die Zwischenablage kopiert!",
+        summaryCopied: "Zusammenfassung kopiert!",
+        calendarDownloaded: "Kalenderdatei heruntergeladen!",
+        eventSaved: "Ereignis erfolgreich gespeichert!",
+        eventDeleted: "Ereignis gelöscht.",
+        emptyTitle: "Keine Countdowns gefunden",
+        emptyDesc: "Passen Sie die Suche an oder erstellen Sie ein neues Ereignis."
+      },
+      pt: {
+        appTitle: "Laboratório de Contagem",
+        appSubtitle: "Feriados Globais e D-Days Pessoais",
+        currentTime: "Hora Sincronizada Atual",
+        btnCreate: "Nova Contagem",
+        btnInstall: "Instalar",
+        btnBackup: "Backup",
+        all: "Todos",
+        favorites: "Favoritos",
+        custom: "Meus D-Days",
+        holidays: "Feriados Globais",
+        astronomy: "Solstícios e Natureza",
+        searchPlaceholder: "Pesquisar evento ou feriado... (/)",
+        days: "Dias",
+        hours: "Horas",
+        mins: "Min",
+        secs: "Seg",
+        ms: "ms",
+        remaining: "Restante",
+        passed: "Decorrido",
+        today: "HOJE É O DIA! 🎉",
+        dDay: "Dia D",
+        share: "Compartilhar",
+        copyStats: "Copiar",
+        icsCalendar: "Calendário .ICS",
+        edit: "Editar",
+        delete: "Excluir",
+        shareSuccess: "Link copiado!",
+        summaryCopied: "Resumo copiado com sucesso!",
+        calendarDownloaded: "Arquivo .ics descarregado!",
+        eventSaved: "Evento salvo com sucesso!",
+        eventDeleted: "Evento excluído.",
+        emptyTitle: "Nenhuma contagem encontrada",
+        emptyDesc: "Ajuste os filtros ou crie um novo evento."
+      },
+      ru: {
+        appTitle: "Лаборатория Обратного Отсчета",
+        appSubtitle: "Мировые праздники и личные D-Day таймеры",
+        currentTime: "Текущее точное время",
+        btnCreate: "Новый отсчет",
+        btnInstall: "Установить",
+        btnBackup: "Резервная копия",
+        all: "Все",
+        favorites: "Избранное",
+        custom: "Мои события",
+        holidays: "Мировые праздники",
+        astronomy: "Астрономия и природа",
+        searchPlaceholder: "Поиск праздника или события... (/)",
+        days: "Дней",
+        hours: "Часов",
+        mins: "Мин",
+        secs: "Сек",
+        ms: "мс",
+        remaining: "Осталось",
+        passed: "Прошло",
+        today: "ЭТОТ ДЕНЬ НАСТАЛ! 🎉",
+        dDay: "D-Day",
+        share: "Поделиться",
+        copyStats: "Копировать",
+        icsCalendar: "В календарь",
+        edit: "Изменить",
+        delete: "Удалить",
+        shareSuccess: "Ссылка скопирована в буфер!",
+        summaryCopied: "Сводка скопирована!",
+        calendarDownloaded: "Файл календаря скачан!",
+        eventSaved: "Событие успешно сохранено!",
+        eventDeleted: "Событие удалено.",
+        emptyTitle: "События не найдены",
+        emptyDesc: "Измените параметры поиска или добавьте новый отсчет."
+      },
+      it: {
+        appTitle: "Laboratorio Conto alla Rovescia",
+        appSubtitle: "Festività Mondiali & D-Day Personali",
+        currentTime: "Ora Attuale Sincronizzata",
+        btnCreate: "Nuovo Timer",
+        btnInstall: "Installa",
+        btnBackup: "Backup",
+        all: "Tutti",
+        favorites: "Preferiti",
+        custom: "I Miei D-Day",
+        holidays: "Festività Mondiali",
+        astronomy: "Solstizi e Natura",
+        searchPlaceholder: "Cerca evento o festività... (/)",
+        days: "Giorni",
+        hours: "Ore",
+        mins: "Min",
+        secs: "Sec",
+        ms: "ms",
+        remaining: "Rimanenti",
+        passed: "Trascorsi",
+        today: "OGGI È IL GIORNO! 🎉",
+        dDay: "D-Day",
+        share: "Condividi",
+        copyStats: "Copia",
+        icsCalendar: "Calendario .ICS",
+        edit: "Modifica",
+        delete: "Elimina",
+        shareSuccess: "Link copiato negli appunti!",
+        summaryCopied: "Riepilogo copiato!",
+        calendarDownloaded: "File di calendario scaricato!",
+        eventSaved: "Evento salvato!",
+        eventDeleted: "Evento eliminato.",
+        emptyTitle: "Nessun conto alla rovescia trovato",
+        emptyDesc: "Modifica la ricerca o crea un nuovo evento personalizzato."
+      },
+      vi: {
+        appTitle: "Đếm Ngược Toàn Cầu",
+        appSubtitle: "Lễ Hội Thế Giới & Ngày D-Day Cá Nhân",
+        currentTime: "Thời Gian Thực Đồng Bộ",
+        btnCreate: "Tạo Đếm Ngược",
+        btnInstall: "Cài Đặt",
+        btnBackup: "Sao Lưu",
+        all: "Tất cả",
+        favorites: "Yêu thích",
+        custom: "D-Day của tôi",
+        holidays: "Ngày Lễ Toàn Cầu",
+        astronomy: "Thiên Văn & Tự Nhiên",
+        searchPlaceholder: "Tìm kiếm sự kiện... (/)",
+        days: "Ngày",
+        hours: "Giờ",
+        mins: "Phút",
+        secs: "Giây",
+        ms: "ms",
+        remaining: "Còn lại",
+        passed: "Đã qua",
+        today: "HÔM NAY LÀ NGÀY ĐÓ! 🎉",
+        dDay: "D-Day",
+        share: "Chia sẻ",
+        copyStats: "Sao chép",
+        icsCalendar: "Tải Lịch .ICS",
+        edit: "Sửa",
+        delete: "Xóa",
+        shareSuccess: "Đã sao chép liên kết!",
+        summaryCopied: "Đã sao chép tóm tắt đếm ngược!",
+        calendarDownloaded: "Đã tải xuống tệp lịch!",
+        eventSaved: "Đã lưu sự kiện!",
+        eventDeleted: "Đã xóa sự kiện.",
+        emptyTitle: "Không tìm thấy đếm ngược",
+        emptyDesc: "Thử tìm kiếm từ khóa khác hoặc tạo sự kiện mới."
+      },
+      th: {
+        appTitle: "ห้องแล็บนับถอยหลัง",
+        appSubtitle: "วันหยุดสำคัญทั่วโลก & D-Day ส่วนตัว",
+        currentTime: "เวลามาตรฐานปัจจุบัน",
+        btnCreate: "สร้างการนับถอยหลัง",
+        btnInstall: "ติดตั้งแอป",
+        btnBackup: "สำรองข้อมูล",
+        all: "ทั้งหมด",
+        favorites: "รายการโปรด",
+        custom: "D-Day ของฉัน",
+        holidays: "วันหยุดทั่วโลก",
+        astronomy: "ดาราศาสตร์และธรรมชาติ",
+        searchPlaceholder: "ค้นหากิจกรรมหรือวันสำคัญ... (/)",
+        days: "วัน",
+        hours: "ชั่วโมง",
+        mins: "นาที",
+        secs: "วินาที",
+        ms: "มิลลิวินาที",
+        remaining: "เหลืออีก",
+        passed: "ผ่านมาแล้ว",
+        today: "วันนี้คือวันสำคัญ! 🎉",
+        dDay: "D-Day",
+        share: "แชร์",
+        copyStats: "คัดลอก",
+        icsCalendar: "บันทึกลงปฏิทิน",
+        edit: "แก้ไข",
+        delete: "ลบ",
+        shareSuccess: "คัดลอกลิงก์แชร์แล้ว!",
+        summaryCopied: "คัดลอกข้อมูลสรุปแล้ว!",
+        calendarDownloaded: "ดาวน์โหลดไฟล์ปฏิทินแล้ว!",
+        eventSaved: "บันทึกกิจกรรมเรียบร้อย!",
+        eventDeleted: "ลบกิจกรรมแล้ว",
+        emptyTitle: "ไม่พบการนับถอยหลัง",
+        emptyDesc: "ลองปรับคำค้นหาหรือสร้างรายการนับถอยหลังใหม่"
+      },
+      id: {
+        appTitle: "Lab Hitung Mundur",
+        appSubtitle: "Hari Libur Global & D-Day Pribadi",
+        currentTime: "Waktu Tersinkronisasi",
+        btnCreate: "Hitung Mundur Baru",
+        btnInstall: "Pasang",
+        btnBackup: "Cadangkan",
+        all: "Semua",
+        favorites: "Favorit",
+        custom: "D-Day Saya",
+        holidays: "Hari Libur Global",
+        astronomy: "Solstis & Alam",
+        searchPlaceholder: "Cari acara atau hari libur... (/)",
+        days: "Hari",
+        hours: "Jam",
+        mins: "Menit",
+        secs: "Detik",
+        ms: "ms",
+        remaining: "Tersisa",
+        passed: "Berlalu",
+        today: "HARI INI SAATNYA! 🎉",
+        dDay: "D-Day",
+        share: "Bagikan",
+        copyStats: "Salin",
+        icsCalendar: "Kalender .ICS",
+        edit: "Ubah",
+        delete: "Hapus",
+        shareSuccess: "Tautan berhasil disalin!",
+        summaryCopied: "Ringkasan disalin!",
+        calendarDownloaded: "Berkas kalender diunduh!",
+        eventSaved: "Acara berhasil disimpan!",
+        eventDeleted: "Acara dihapus.",
+        emptyTitle: "Hitung mundur tidak ditemukan",
+        emptyDesc: "Coba kata kunci lain atau buat hitung mundur baru."
+      },
+      tr: {
+        appTitle: "Geri Sayım Laboratuvarı",
+        appSubtitle: "Küresel Tatiller ve Kişisel D-Day",
+        currentTime: "Senkronize Güncel Saat",
+        btnCreate: "Yeni Geri Sayım",
+        btnInstall: "Yükle",
+        btnBackup: "Yedekle",
+        all: "Tümü",
+        favorites: "Favoriler",
+        custom: "Benim D-Day'lerim",
+        holidays: "Küresel Tatiller",
+        astronomy: "Gündönümü & Doğa",
+        searchPlaceholder: "Etkinlik veya tatil ara... (/)",
+        days: "Gün",
+        hours: "Saat",
+        mins: "Dak",
+        secs: "Sn",
+        ms: "ms",
+        remaining: "Kaldı",
+        passed: "Geçti",
+        today: "BUGÜN O GÜN! 🎉",
+        dDay: "D-Day",
+        share: "Paylaş",
+        copyStats: "Kopyala",
+        icsCalendar: "Takvime Ekle",
+        edit: "Düzenle",
+        delete: "Sil",
+        shareSuccess: "Bağlantı kopyalandı!",
+        summaryCopied: "Geri sayım özeti kopyalandı!",
+        calendarDownloaded: "Takvim dosyası indirildi!",
+        eventSaved: "Etkinlik kaydedildi!",
+        eventDeleted: "Etkinlik silindi.",
+        emptyTitle: "Geri sayım bulunamadı",
+        emptyDesc: "Aramayı değiştirin veya yeni bir etkinlik oluşturun."
+      },
+      pl: {
+        appTitle: "Laboratorium Odliczania",
+        appSubtitle: "Święta Globalne i Osobiste D-Day",
+        currentTime: "Bieżący Czas Zsynchronizowany",
+        btnCreate: "Nowe Odliczanie",
+        btnInstall: "Zainstaluj",
+        btnBackup: "Kopia Zapasowa",
+        all: "Wszystkie",
+        favorites: "Ulubione",
+        custom: "Moje D-Day",
+        holidays: "Święta Globalne",
+        astronomy: "Przesilenia i Przyroda",
+        searchPlaceholder: "Szukaj wydarzenia lub święta... (/)",
+        days: "Dni",
+        hours: "Godz",
+        mins: "Min",
+        secs: "Sek",
+        ms: "ms",
+        remaining: "Pozostało",
+        passed: "Minęło",
+        today: "TO DZISIAJ! 🎉",
+        dDay: "D-Day",
+        share: "Udostępnij",
+        copyStats: "Kopiuj",
+        icsCalendar: "Kalendarz .ICS",
+        edit: "Edytuj",
+        delete: "Usuń",
+        shareSuccess: "Link skopiowany do schowka!",
+        summaryCopied: "Podsumowanie skopiowane!",
+        calendarDownloaded: "Pobrano plik kalendarza!",
+        eventSaved: "Zapisano wydarzenie!",
+        eventDeleted: "Wydarzenie usunięte.",
+        emptyTitle: "Nie znaleziono odliczań",
+        emptyDesc: "Dostosuj wyszukiwanie lub utwórz nowe wydarzenie."
+      },
+      nl: {
+        appTitle: "Aftel-Laboratorium",
+        appSubtitle: "Wereldwijde Feestdagen & Persoonlijke D-Days",
+        currentTime: "Huidige Gesynchroniseerde Tijd",
+        btnCreate: "Nieuwe Timer",
+        btnInstall: "Installeren",
+        btnBackup: "Back-up",
+        all: "Alles",
+        favorites: "Favorieten",
+        custom: "Mijn D-Days",
+        holidays: "Wereldwijde Feestdagen",
+        astronomy: "Zonnewendes & Natuur",
+        searchPlaceholder: "Zoek evenement... (/)",
+        days: "Dagen",
+        hours: "Uur",
+        mins: "Min",
+        secs: "Sec",
+        ms: "ms",
+        remaining: "Resterend",
+        passed: "Verstreken",
+        today: "VANDAAG IS DE DAG! 🎉",
+        dDay: "D-Day",
+        share: "Delen",
+        copyStats: "Kopiëren",
+        icsCalendar: "Kalender .ICS",
+        edit: "Bewerken",
+        delete: "Verwijderen",
+        shareSuccess: "Deellink gekopieerd!",
+        summaryCopied: "Samenvatting gekopieerd!",
+        calendarDownloaded: "Kalenderbestand gedownload!",
+        eventSaved: "Evenement opgeslagen!",
+        eventDeleted: "Evenement verwijderd.",
+        emptyTitle: "Geen timers gevonden",
+        emptyDesc: "Pas je zoekopdracht aan of maak een nieuw evenement."
+      },
+      ar: {
+        appTitle: "مختبر العد التنازلي العالمي",
+        appSubtitle: "العطلات العالمية والأيام الخاصة المخصصة",
+        currentTime: "الوقت الحالي الموثوق",
+        btnCreate: "عداد جديد",
+        btnInstall: "تثبيت",
+        btnBackup: "نسخ احتياطي",
+        all: "الكل",
+        favorites: "المفضلة",
+        custom: "أيامي الخاصة",
+        holidays: "العطلات العالمية",
+        astronomy: "الانقلابات والطبيعة",
+        searchPlaceholder: "ابحث عن حدث أو عطلة... (/)",
+        days: "أيام",
+        hours: "ساعات",
+        mins: "دقائق",
+        secs: "ثوانٍ",
+        ms: "جزء",
+        remaining: "متبقي",
+        passed: "مضى",
+        today: "اليوم هو اليوم المنشود! 🎉",
+        dDay: "اليوم الموعود",
+        share: "مشاركة",
+        copyStats: "نسخ",
+        icsCalendar: "حفظ في التقويم",
+        edit: "تعديل",
+        delete: "حذف",
+        shareSuccess: "تم نسخ رابط المشاركة!",
+        summaryCopied: "تم نسخ الملخص!",
+        calendarDownloaded: "تم تحميل ملف التقويم!",
+        eventSaved: "تم حفظ الحدث بنجاح!",
+        eventDeleted: "تم حذف الحدث.",
+        emptyTitle: "لم يتم العثور على أحداث",
+        emptyDesc: "يرجى تغيير كلمة البحث أو إنشاء عداد تنازلي جديد."
+      },
+      hi: {
+        appTitle: "उलटी गिनती प्रयोगशाला",
+        appSubtitle: "वैश्विक छुट्टियां और व्यक्तिगत डी-डे टाइमर",
+        currentTime: "वर्तमान सटीक समय",
+        btnCreate: "नया टाइमर",
+        btnInstall: "इंस्टॉल करें",
+        btnBackup: "बैकअप",
+        all: "सभी",
+        favorites: "पसंदीदा",
+        custom: "मेरे डी-डे",
+        holidays: "वैश्विक छुट्टियां",
+        astronomy: "संक्रांति और प्रकृति",
+        searchPlaceholder: "इवेंट या छुट्टी खोजें... (/)",
+        days: "दिन",
+        hours: "घंटे",
+        mins: "मिनट",
+        secs: "सेकंड",
+        ms: "मिली",
+        remaining: "शेष",
+        passed: "बीत चुके",
+        today: "आज ही वह दिन है! 🎉",
+        dDay: "डी-डे",
+        share: "शेयर करें",
+        copyStats: "कॉपी करें",
+        icsCalendar: "कैलेंडर .ICS",
+        edit: "संपादित करें",
+        delete: "हटाएं",
+        shareSuccess: "शेयर लिंक कॉपी किया गया!",
+        summaryCopied: "सारांश कॉपी किया गया!",
+        calendarDownloaded: "कैलेंडर फ़ाइल डाउनलोड हुई!",
+        eventSaved: "इवेंट सफलतापूर्वक सहेजा गया!",
+        eventDeleted: "इवेंट हटा दिया गया।",
+        emptyTitle: "कोई उलटी गिनती नहीं मिली",
+        emptyDesc: "खोज बदलकर देखें या अपना नया इवेंट जोड़ें।"
+      },
+      sv: {
+        appTitle: "Nedräkningslabbet",
+        appSubtitle: "Globala Högtider & Personliga D-Dagar",
+        currentTime: "Aktuell Synkroniserad Tid",
+        btnCreate: "Ny Nedräkning",
+        btnInstall: "Installera",
+        btnBackup: "Säkerhetskopia",
+        all: "Alla",
+        favorites: "Favoriter",
+        custom: "Mina D-Dagar",
+        holidays: "Globala Högtider",
+        astronomy: "Solstånd & Natur",
+        searchPlaceholder: "Sök händelse eller högtid... (/)",
+        days: "Dagar",
+        hours: "Timmar",
+        mins: "Min",
+        secs: "Sek",
+        ms: "ms",
+        remaining: "Kvar",
+        passed: "Förflutit",
+        today: "IDAG ÄR DAGEN! 🎉",
+        dDay: "D-Dag",
+        share: "Dela",
+        copyStats: "Kopiera",
+        icsCalendar: "Kalender .ICS",
+        edit: "Redigera",
+        delete: "Ta bort",
+        shareSuccess: "Länk kopierad till urklipp!",
+        summaryCopied: "Sammanfattning kopierad!",
+        calendarDownloaded: "Kalenderfil nedladdad!",
+        eventSaved: "Händelsen sparades!",
+        eventDeleted: "Händelsen togs bort.",
+        emptyTitle: "Inga nedräkningar hittades",
+        emptyDesc: "Ändra sökord eller skapa en ny personlig nedräkning."
+      },
+      uk: {
+        appTitle: "Лабораторія Відліку",
+        appSubtitle: "Світові Свята та Власні D-Day Події",
+        currentTime: "Поточний Синхронізований Час",
+        btnCreate: "Новий Відлік",
+        btnInstall: "Встановити",
+        btnBackup: "Резервна копія",
+        all: "Всі",
+        favorites: "Обрані",
+        custom: "Мої D-Day",
+        holidays: "Світові Свята",
+        astronomy: "Сонцестояння та Природа",
+        searchPlaceholder: "Пошук свята або події... (/)",
+        days: "Днів",
+        hours: "Годин",
+        mins: "Хв",
+        secs: "Сек",
+        ms: "мс",
+        remaining: "Залишилось",
+        passed: "Минуло",
+        today: "СЬОГОДНІ ЦЕЙ ДЕНЬ! 🎉",
+        dDay: "D-Day",
+        share: "Поділитися",
+        copyStats: "Копіювати",
+        icsCalendar: "Календар .ICS",
+        edit: "Редагувати",
+        delete: "Видалити",
+        shareSuccess: "Посилання скопійовано!",
+        summaryCopied: "Підсумок скопійовано!",
+        calendarDownloaded: "Файл календаря завантажено!",
+        eventSaved: "Подію успішно збережено!",
+        eventDeleted: "Подію видалено.",
+        emptyTitle: "Відліків не знайдено",
+        emptyDesc: "Спробуйте інші ключові слова або додайте власну подію."
+      }
+    };
+
+    /* ==========================================================================
+       2. GLOBAL HOLIDAYS DATA & DYNAMIC RECURRENCE CALCULATION
+       ========================================================================== */
+    // Helper to calculate US Thanksgiving: 4th Thursday of November
+    function getThanksgivingDate(year) {
+      const novFirst = new Date(year, 10, 1);
+      const day = novFirst.getDay();
+      const firstThu = day <= 4 ? (1 + 4 - day) : (1 + 11 - day);
+      return new Date(year, 10, firstThu + 21, 0, 0, 0);
+    }
+
+    // Curated dynamic holidays definition
+    const HOLIDAY_DEFS = [
+      {
+        id: "hol_new_year",
+        name: "New Year's Day",
+        category: "holiday",
+        color: "amber",
+        icon: "✨",
+        calc: (year) => new Date(year, 0, 1, 0, 0, 0)
+      },
+      {
+        id: "hol_lunar_ny",
+        name: "Lunar New Year / Spring Festival",
+        category: "holiday",
+        color: "rose",
+        icon: "🧧",
+        calc: (year) => {
+          const lunarMap = { 2025: [0, 29], 2026: [1, 17], 2027: [1, 6], 2028: [0, 26], 2029: [1, 13], 2030: [1, 3] };
+          const d = lunarMap[year] || [1, 10];
+          return new Date(year, d[0], d[1], 0, 0, 0);
+        }
+      },
+      {
+        id: "hol_valentine",
+        name: "Valentine's Day",
+        category: "holiday",
+        color: "rose",
+        icon: "❤️",
+        calc: (year) => new Date(year, 1, 14, 0, 0, 0)
+      },
+      {
+        id: "hol_womens_day",
+        name: "International Women's Day",
+        category: "holiday",
+        color: "violet",
+        icon: "🌸",
+        calc: (year) => new Date(year, 2, 8, 0, 0, 0)
+      },
+      {
+        id: "hol_st_patrick",
+        name: "St. Patrick's Day",
+        category: "holiday",
+        color: "emerald",
+        icon: "☘️",
+        calc: (year) => new Date(year, 2, 17, 0, 0, 0)
+      },
+      {
+        id: "hol_spring_equinox",
+        name: "Vernal (Spring) Equinox",
+        category: "astronomy",
+        color: "emerald",
+        icon: "🌱",
+        calc: (year) => new Date(year, 2, 20, 9, 30, 0)
+      },
+      {
+        id: "hol_eid_fitr",
+        name: "Eid al-Fitr",
+        category: "holiday",
+        color: "emerald",
+        icon: "🌙",
+        calc: (year) => {
+          const eidMap = { 2025: [2, 31], 2026: [2, 20], 2027: [2, 10], 2028: [1, 27], 2029: [1, 15], 2030: [1, 5] };
+          const d = eidMap[year] || [2, 20];
+          return new Date(year, d[0], d[1], 0, 0, 0);
+        }
+      },
+      {
+        id: "hol_earth_day",
+        name: "Earth Day",
+        category: "astronomy",
+        color: "emerald",
+        icon: "🌍",
+        calc: (year) => new Date(year, 3, 22, 0, 0, 0)
+      },
+      {
+        id: "hol_eid_adha",
+        name: "Eid al-Adha",
+        category: "holiday",
+        color: "emerald",
+        icon: "🕌",
+        calc: (year) => {
+          const adhaMap = { 2025: [5, 6], 2026: [4, 27], 2027: [4, 16], 2028: [4, 5], 2029: [3, 24], 2030: [3, 14] };
+          const d = adhaMap[year] || [4, 27];
+          return new Date(year, d[0], d[1], 0, 0, 0);
+        }
+      },
+      {
+        id: "hol_summer_solstice",
+        name: "Summer Solstice (Midsummer)",
+        category: "astronomy",
+        color: "amber",
+        icon: "☀️",
+        calc: (year) => new Date(year, 5, 21, 15, 0, 0)
+      },
+      {
+        id: "hol_autumn_equinox",
+        name: "Autumnal Equinox",
+        category: "astronomy",
+        color: "amber",
+        icon: "🍂",
+        calc: (year) => new Date(year, 8, 22, 12, 0, 0)
+      },
+      {
+        id: "hol_halloween",
+        name: "Halloween",
+        category: "holiday",
+        color: "amber",
+        icon: "🎃",
+        calc: (year) => new Date(year, 9, 31, 0, 0, 0)
+      },
+      {
+        id: "hol_diwali",
+        name: "Diwali (Festival of Lights)",
+        category: "holiday",
+        color: "amber",
+        icon: "🪔",
+        calc: (year) => {
+          const diwaliMap = { 2025: [9, 20], 2026: [10, 8], 2027: [9, 29], 2028: [9, 17], 2029: [10, 5], 2030: [9, 26] };
+          const d = diwaliMap[year] || [10, 8];
+          return new Date(year, d[0], d[1], 0, 0, 0);
+        }
+      },
+      {
+        id: "hol_thanksgiving",
+        name: "Thanksgiving Day",
+        category: "holiday",
+        color: "amber",
+        icon: "🦃",
+        calc: getThanksgivingDate
+      },
+      {
+        id: "hol_winter_solstice",
+        name: "Winter Solstice",
+        category: "astronomy",
+        color: "sky",
+        icon: "❄️",
+        calc: (year) => new Date(year, 11, 21, 21, 0, 0)
+      },
+      {
+        id: "hol_christmas",
+        name: "Christmas Day",
+        category: "holiday",
+        color: "rose",
+        icon: "🎄",
+        calc: (year) => new Date(year, 11, 25, 0, 0, 0)
+      },
+      {
+        id: "hol_nye",
+        name: "New Year's Eve Countdown",
+        category: "holiday",
+        color: "violet",
+        icon: "🥂",
+        calc: (year) => new Date(year, 11, 31, 23, 59, 59)
+      }
+    ];
+
+    /* ==========================================================================
+       3. STATE MANAGEMENT & LOCALSTORAGE PERSISTENCE
+       ========================================================================== */
+    const STORAGE_KEY_EVENTS = "countdown_lab_custom_events";
+    const STORAGE_KEY_FAVS = "countdown_lab_favorites";
+    const STORAGE_KEY_LANG = "countdown_lab_lang";
+    const STORAGE_KEY_THEME = "countdown_lab_theme";
+    const STORAGE_KEY_VIEW = "countdown_lab_view_mode";
+
+    let state = {
+      lang: localStorage.getItem(STORAGE_KEY_LANG) || "en",
+      theme: localStorage.getItem(STORAGE_KEY_THEME) || "dark",
+      viewMode: localStorage.getItem(STORAGE_KEY_VIEW) || "grid", // 'grid' | 'compact'
+      activeCategory: "all",
+      searchQuery: "",
+      favorites: JSON.parse(localStorage.getItem(STORAGE_KEY_FAVS) || "[]"),
+      customEvents: JSON.parse(localStorage.getItem(STORAGE_KEY_EVENTS) || "[]")
+    };
+
+    // Initialize state if empty with a starter milestone
+    if (state.customEvents.length === 0) {
+      state.customEvents = [
+        {
+          id: "cust_starter_milestone",
+          title: "Next Big Career & Personal Goal",
+          targetDate: new Date(Date.now() + 86400000 * 45).toISOString(),
+          category: "milestone",
+          color: "sky",
+          notes: "Focus on daily incremental progress and celebrate milestones!",
+          recurringYearly: false,
+          createdAt: new Date().toISOString()
+        }
+      ];
+      localStorage.setItem(STORAGE_KEY_EVENTS, JSON.stringify(state.customEvents));
+    }
+
+    /* ==========================================================================
+       4. TIME DIFFERENCE & ADVANCED PRECISION ENGINE
+       ========================================================================== */
+    function computeTargetDate(item) {
+      if (item.targetDate) {
+        return new Date(item.targetDate);
+      }
+      if (item.calc) {
+        const now = new Date();
+        const currentYear = now.getFullYear();
+        let target = item.calc(currentYear);
+        // If holiday passed more than 24 hours ago, target next year
+        if (target.getTime() < now.getTime() - 86400000) {
+          target = item.calc(currentYear + 1);
+        }
+        return target;
+      }
+      return new Date();
+    }
+
+    function calculateTimeDiff(targetDate) {
+      const now = new Date();
+      const diffMs = targetDate.getTime() - now.getTime();
+      const isPast = diffMs < 0;
+      const absMs = Math.abs(diffMs);
+
+      const totalSeconds = Math.floor(absMs / 1000);
+      const days = Math.floor(totalSeconds / 86400);
+      const hours = Math.floor((totalSeconds % 86400) / 3600);
+      const minutes = Math.floor((totalSeconds % 3600) / 60);
+      const seconds = totalSeconds % 60;
+      const milliseconds = Math.floor((absMs % 1000) / 10); // 2-digit ms (0-99)
+
+      // Check if event is today
+      const isToday = !isPast && days === 0 && diffMs <= 86400000;
+
+      return { isPast, isToday, diffMs, absMs, days, hours, minutes, seconds, milliseconds };
+    }
+
+    /* ==========================================================================
+       5. UI RENDERER & CARD COMPONENTS
+       ========================================================================== */
+    function getTranslation(key) {
+      const dict = I18N[state.lang] || I18N.en;
+      return dict[key] || I18N.en[key] || key;
+    }
+
+    function applyLanguage() {
+      const dict = I18N[state.lang] || I18N.en;
+      document.documentElement.lang = state.lang;
+      document.documentElement.dir = state.lang === 'ar' ? 'rtl' : 'ltr';
+
+      document.getElementById('txt-app-title').textContent = dict.appTitle;
+      document.getElementById('txt-app-subtitle').textContent = dict.appSubtitle;
+      document.getElementById('txt-current-time-label').textContent = dict.currentTime;
+      document.getElementById('txt-btn-create').textContent = dict.btnCreate;
+      document.getElementById('txt-btn-install').textContent = dict.btnInstall;
+      document.getElementById('txt-btn-backup').textContent = dict.btnBackup;
+      document.getElementById('event-search-input').placeholder = dict.searchPlaceholder;
+      document.getElementById('txt-empty-title').textContent = dict.emptyTitle;
+      document.getElementById('txt-empty-desc').textContent = dict.emptyDesc;
+
+      document.getElementById('lang-select').value = state.lang;
+      renderCountdowns();
+    }
+
+    function applyTheme() {
+      const html = document.documentElement;
+      html.classList.remove('theme-light', 'theme-dark', 'theme-aurora', 'theme-holiday', 'theme-cyberpunk', 'theme-sunset');
+      if (state.theme === 'light') {
+        html.classList.remove('dark');
+        html.classList.add('theme-light');
+        document.getElementById('theme-icon').textContent = '☀️';
+        document.getElementById('meta-theme-color').setAttribute('content', '#f8fafc');
+      } else {
+        html.classList.add('dark');
+        if (state.theme !== 'dark') html.classList.add(`theme-${state.theme}`);
+        const icons = { dark: '🌙', aurora: '🌌', holiday: '🎄', cyberpunk: '⚡', sunset: '🌅' };
+        document.getElementById('theme-icon').textContent = icons[state.theme] || '🌙';
+        document.getElementById('meta-theme-color').setAttribute('content', '#0b0f19');
+      }
+      document.getElementById('theme-select').value = state.theme;
+    }
+
+    function getAllItems() {
+      const holidays = HOLIDAY_DEFS.map(h => ({
+        ...h,
+        isCustom: false,
+        isFavorite: state.favorites.includes(h.id)
+      }));
+      const customs = state.customEvents.map(c => ({
+        ...c,
+        isCustom: true,
+        icon: getCategoryIcon(c.category),
+        isFavorite: state.favorites.includes(c.id)
+      }));
+      return [...customs, ...holidays];
+    }
+
+    function getCategoryIcon(cat) {
+      const icons = {
+        personal: '📌',
+        celebration: '🎉',
+        travel: '✈️',
+        exam: '📚',
+        milestone: '🏆',
+        work: '💼',
+        custom: '⭐'
+      };
+      return icons[cat] || '⏱️';
+    }
+
+    function getColorStyles(colorName) {
+      const map = {
+        sky: { border: 'border-sky-500/40', text: 'text-sky-400', bg: 'bg-sky-500/10', glow: 'shadow-sky-500/10' },
+        emerald: { border: 'border-emerald-500/40', text: 'text-emerald-400', bg: 'bg-emerald-500/10', glow: 'shadow-emerald-500/10' },
+        rose: { border: 'border-rose-500/40', text: 'text-rose-400', bg: 'bg-rose-500/10', glow: 'shadow-rose-500/10' },
+        amber: { border: 'border-amber-500/40', text: 'text-amber-400', bg: 'bg-amber-500/10', glow: 'shadow-amber-500/10' },
+        violet: { border: 'border-violet-500/40', text: 'text-violet-400', bg: 'bg-violet-500/10', glow: 'shadow-violet-500/10' },
+        fuchsia: { border: 'border-fuchsia-500/40', text: 'text-fuchsia-400', bg: 'bg-fuchsia-500/10', glow: 'shadow-fuchsia-500/10' }
+      };
+      return map[colorName] || map.sky;
+    }
+
+    function renderCountdowns() {
+      const container = document.getElementById('countdown-grid');
+      const emptyState = document.getElementById('empty-state');
+      const dict = I18N[state.lang] || I18N.en;
+
+      const allItems = getAllItems();
+
+      // Update Tab Counter Badges
+      document.getElementById('count-all').textContent = allItems.length;
+      document.getElementById('count-favs').textContent = allItems.filter(i => i.isFavorite).length;
+      document.getElementById('count-custom').textContent = state.customEvents.length;
+      document.getElementById('count-holiday').textContent = HOLIDAY_DEFS.filter(h => h.category === 'holiday').length;
+      document.getElementById('count-astronomy').textContent = HOLIDAY_DEFS.filter(h => h.category === 'astronomy').length;
+
+      // Filter
+      let filtered = allItems.filter(item => {
+        if (state.activeCategory === 'favorites') return item.isFavorite;
+        if (state.activeCategory === 'custom') return item.isCustom;
+        if (state.activeCategory === 'holiday') return !item.isCustom && item.category === 'holiday';
+        if (state.activeCategory === 'astronomy') return !item.isCustom && item.category === 'astronomy';
+        return true;
+      });
+
+      // Search Filter
+      if (state.searchQuery.trim()) {
+        const q = state.searchQuery.toLowerCase();
+        filtered = filtered.filter(i => 
+          i.name?.toLowerCase().includes(q) || 
+          i.title?.toLowerCase().includes(q) ||
+          i.notes?.toLowerCase().includes(q)
+        );
+      }
+
+      // Sort: Upcoming events first sorted by time remaining
+      filtered.sort((a, b) => {
+        const dateA = computeTargetDate(a).getTime();
+        const dateB = computeTargetDate(b).getTime();
+        return dateA - dateB;
+      });
+
+      if (filtered.length === 0) {
+        container.innerHTML = '';
+        emptyState.classList.remove('hidden');
+        return;
+      }
+      emptyState.classList.add('hidden');
+
+      // Grid vs Compact Layout
+      if (state.viewMode === 'compact') {
+        container.className = 'flex flex-col gap-2.5';
+      } else {
+        container.className = 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4';
+      }
+
+      container.innerHTML = filtered.map(item => renderCardHtml(item, dict)).join('');
+    }
+
+    function renderCardHtml(item, dict) {
+      const targetDate = computeTargetDate(item);
+      const diff = calculateTimeDiff(targetDate);
+      const colors = getColorStyles(item.color || 'sky');
+      const title = item.name || item.title;
+      const isFav = item.isFavorite;
+      const dateFormatted = targetDate.toLocaleDateString(state.lang, { 
+        weekday: 'short', year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' 
+      });
+
+      const dTag = diff.isToday 
+        ? `<span class="px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-rose-500 text-white animate-pulse">D-DAY</span>`
+        : `<span class="px-2 py-0.5 rounded-full text-[10px] font-bold ${colors.bg} ${colors.text} border ${colors.border}">D${diff.isPast ? '+' : '-'}${diff.days}</span>`;
+
+      // Compact Row Mode
+      if (state.viewMode === 'compact') {
+        return `
+          <div class="card-theme border rounded-xl p-3 flex flex-col sm:flex-row sm:items-center justify-between gap-3 hover:border-gray-500 transition shadow-sm" id="card-${item.id}">
+            <div class="flex items-center gap-3 min-w-0">
+              <span class="text-xl">${item.icon || '⏳'}</span>
+              <div class="truncate">
+                <div class="flex items-center gap-2">
+                  <span class="font-bold text-sm text-gray-100 truncate">${escapeHtml(title)}</span>
+                  ${dTag}
+                </div>
+                <div class="text-[11px] text-gray-400 font-mono">${dateFormatted}</div>
+              </div>
+            </div>
+
+            <div class="flex items-center justify-between sm:justify-end gap-3">
+              <div class="text-right font-mono tabular-nums text-xs">
+                <span class="font-bold text-gray-100">${diff.days}d ${pad(diff.hours)}h ${pad(diff.minutes)}m ${pad(diff.seconds)}s</span>
+                <span class="text-[10px] block ${diff.isPast ? 'text-amber-400' : 'text-emerald-400'}">${diff.isPast ? dict.passed : dict.remaining}</span>
+              </div>
+              <div class="flex items-center gap-1">
+                <button onclick="toggleFavorite('${item.id}')" class="p-1.5 rounded-lg hover:bg-gray-800 text-xs text-amber-400" title="Favorite">
+                  ${isFav ? '★' : '☆'}
+                </button>
+                <button onclick="copyEventStats('${item.id}')" class="p-1.5 rounded-lg hover:bg-gray-800 text-xs text-gray-300" title="${dict.copyStats}">
+                  📋
+                </button>
+                <button onclick="shareEvent('${item.id}')" class="p-1.5 rounded-lg hover:bg-gray-800 text-xs text-sky-400" title="${dict.share}">
+                  🔗
+                </button>
+              </div>
+            </div>
+          </div>
+        `;
+      }
+
+      // Standard Rich Grid Card Mode
+      return `
+        <div class="card-theme border rounded-2xl p-5 flex flex-col justify-between hover:border-gray-500 transition-all duration-200 shadow-md relative group hover:-translate-y-0.5" id="card-${item.id}">
+          
+          <!-- Top Row: Icon, Title, Favorite & Actions -->
+          <div>
+            <div class="flex items-start justify-between gap-2 mb-3">
+              <div class="flex items-center gap-2.5">
+                <span class="text-2xl p-2 rounded-xl bg-gray-800/60 border border-gray-700/50">${item.icon || '⏳'}</span>
+                <div>
+                  <h3 class="font-bold text-sm text-gray-100 line-clamp-1">${escapeHtml(title)}</h3>
+                  <div class="text-[11px] text-gray-400 font-mono flex items-center gap-1.5 mt-0.5">
+                    <span>${dateFormatted}</span>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="flex items-center gap-1">
+                ${dTag}
+                <button onclick="toggleFavorite('${item.id}')" class="p-1.5 rounded-lg hover:bg-gray-800/80 text-amber-400 transition" title="Pin / Favorite">
+                  ${isFav ? '★' : '☆'}
+                </button>
+              </div>
+            </div>
+
+            <!-- Notes if any -->
+            ${item.notes ? `<p class="text-xs text-gray-400 bg-gray-900/40 px-2.5 py-1.5 rounded-lg mb-3 border border-gray-800/60 line-clamp-2">${escapeHtml(item.notes)}</p>` : ''}
+
+            <!-- Precision Counter Blocks -->
+            <div class="grid grid-cols-4 gap-1.5 my-3 text-center">
+              <div class="bg-gray-900/70 border border-gray-800/80 rounded-xl py-2 px-1">
+                <span class="block font-extrabold text-base sm:text-lg tabular-nums text-gray-100" id="num-d-${item.id}">${diff.days}</span>
+                <span class="text-[9px] uppercase font-bold tracking-wider text-gray-400">${dict.days}</span>
+              </div>
+              <div class="bg-gray-900/70 border border-gray-800/80 rounded-xl py-2 px-1">
+                <span class="block font-extrabold text-base sm:text-lg tabular-nums text-gray-100" id="num-h-${item.id}">${pad(diff.hours)}</span>
+                <span class="text-[9px] uppercase font-bold tracking-wider text-gray-400">${dict.hours}</span>
+              </div>
+              <div class="bg-gray-900/70 border border-gray-800/80 rounded-xl py-2 px-1">
+                <span class="block font-extrabold text-base sm:text-lg tabular-nums text-gray-100" id="num-m-${item.id}">${pad(diff.minutes)}</span>
+                <span class="text-[9px] uppercase font-bold tracking-wider text-gray-400">${dict.mins}</span>
+              </div>
+              <div class="bg-gray-900/70 border border-gray-800/80 rounded-xl py-2 px-1 relative overflow-hidden">
+                <span class="block font-extrabold text-base sm:text-lg tabular-nums ${colors.text}" id="num-s-${item.id}">${pad(diff.seconds)}</span>
+                <span class="text-[9px] uppercase font-bold tracking-wider text-gray-400">${dict.secs}</span>
+                <span class="text-[9px] text-gray-500 font-mono tabular-nums block" id="num-ms-${item.id}">.${pad(diff.milliseconds)}</span>
+              </div>
+            </div>
+
+            <div class="text-right text-[11px] font-semibold mb-2 ${diff.isPast ? 'text-amber-400' : 'text-emerald-400'}">
+              ${diff.isPast ? `⏱️ ${dict.passed}` : `⏳ ${dict.remaining}`}
+            </div>
+          </div>
+
+          <!-- Bottom Action Buttons Toolbar -->
+          <div class="flex items-center justify-between gap-1 pt-3 border-t border-gray-800/80 text-xs">
+            <div class="flex items-center gap-1">
+              <button onclick="copyEventStats('${item.id}')" class="px-2 py-1 rounded-lg bg-gray-800/50 hover:bg-gray-700/60 text-gray-300 font-medium transition flex items-center gap-1" title="${dict.copyStats}">
+                <span>📋</span>
+                <span class="hidden sm:inline">${dict.copyStats}</span>
+              </button>
+              <button onclick="shareEvent('${item.id}')" class="px-2 py-1 rounded-lg bg-gray-800/50 hover:bg-gray-700/60 text-sky-400 font-medium transition flex items-center gap-1" title="${dict.share}">
+                <span>🔗</span>
+                <span class="hidden sm:inline">${dict.share}</span>
+              </button>
+              <button onclick="downloadEventIcs('${item.id}')" class="px-2 py-1 rounded-lg bg-gray-800/50 hover:bg-gray-700/60 text-emerald-400 font-medium transition flex items-center gap-1" title="${dict.icsCalendar}">
+                <span>📅</span>
+                <span class="hidden sm:inline">.ICS</span>
+              </button>
+            </div>
+
+            <div class="flex items-center gap-1">
+              ${item.isCustom ? `
+                <button onclick="editCustomEvent('${item.id}')" class="p-1 rounded-lg hover:bg-gray-800 text-gray-400 hover:text-white" title="${dict.edit}">✏️</button>
+                <button onclick="deleteCustomEvent('${item.id}')" class="p-1 rounded-lg hover:bg-gray-800 text-gray-400 hover:text-red-400" title="${dict.delete}">🗑️</button>
+              ` : `
+                <span class="text-[10px] text-gray-500 font-medium">Recurring</span>
+              `}
+            </div>
+          </div>
+
+        </div>
+      `;
+    }
+
+    function updateLiveCounters() {
+      // Update Hero live standard clock
+      const now = new Date();
+      document.getElementById('hero-live-clock').textContent = now.toLocaleTimeString(state.lang, { hour12: false });
+      document.getElementById('hero-live-date').textContent = now.toLocaleDateString(state.lang, { 
+        weekday: 'long', year: 'numeric', month: 'short', day: 'numeric' 
+      });
+
+      // Update individual countdown cards
+      const allItems = getAllItems();
+      allItems.forEach(item => {
+        const target = computeTargetDate(item);
+        const diff = calculateTimeDiff(target);
+
+        const elD = document.getElementById(`num-d-${item.id}`);
+        const elH = document.getElementById(`num-h-${item.id}`);
+        const elM = document.getElementById(`num-m-${item.id}`);
+        const elS = document.getElementById(`num-s-${item.id}`);
+        const elMs = document.getElementById(`num-ms-${item.id}`);
+
+        if (elD) elD.textContent = diff.days;
+        if (elH) elH.textContent = pad(diff.hours);
+        if (elM) elM.textContent = pad(diff.minutes);
+        if (elS) elS.textContent = pad(diff.seconds);
+        if (elMs) elMs.textContent = `.${pad(diff.milliseconds)}`;
+      });
+    }
+
+    /* ==========================================================================
+       6. USER ACTIONS: FAVORITES, CUSTOM EVENTS, SHARE & EXPORT
+       ========================================================================== */
+    function toggleFavorite(id) {
+      if (state.favorites.includes(id)) {
+        state.favorites = state.favorites.filter(favId => favId !== id);
+        showToast("Removed from favorites", "info");
+      } else {
+        state.favorites.push(id);
+        showToast("Added to favorites! ⭐", "success");
+      }
+      localStorage.setItem(STORAGE_KEY_FAVS, JSON.stringify(state.favorites));
+      renderCountdowns();
+    }
+
+    function openCreateModal() {
+      document.getElementById('modal-event-heading').textContent = getTranslation('btnCreate');
+      document.getElementById('form-event-id').value = '';
+      document.getElementById('event-title').value = '';
+      
+      // Default datetime: tomorrow at 09:00
+      const tomorrow = new Date(Date.now() + 86400000);
+      tomorrow.setHours(9, 0, 0, 0);
+      const localIso = new Date(tomorrow.getTime() - tomorrow.getTimezoneOffset() * 60000).toISOString().slice(0, 16);
+      document.getElementById('event-datetime').value = localIso;
+
+      document.getElementById('event-category').value = 'custom';
+      document.getElementById('event-color').value = 'sky';
+      document.getElementById('event-notes').value = '';
+      document.getElementById('event-recurring').checked = false;
+
+      openModal('modal-event');
+    }
+
+    function editCustomEvent(id) {
+      const ev = state.customEvents.find(e => e.id === id);
+      if (!ev) return;
+
+      document.getElementById('modal-event-heading').textContent = getTranslation('edit');
+      document.getElementById('form-event-id').value = ev.id;
+      document.getElementById('event-title').value = ev.title;
+
+      const dateObj = new Date(ev.targetDate);
+      const localIso = new Date(dateObj.getTime() - dateObj.getTimezoneOffset() * 60000).toISOString().slice(0, 16);
+      document.getElementById('event-datetime').value = localIso;
+
+      document.getElementById('event-category').value = ev.category || 'custom';
+      document.getElementById('event-color').value = ev.color || 'sky';
+      document.getElementById('event-notes').value = ev.notes || '';
+      document.getElementById('event-recurring').checked = !!ev.recurringYearly;
+
+      openModal('modal-event');
+    }
+
+    function saveCustomEvent(e) {
+      e.preventDefault();
+      const id = document.getElementById('form-event-id').value;
+      const title = document.getElementById('event-title').value.trim();
+      const dateVal = document.getElementById('event-datetime').value;
+      const category = document.getElementById('event-category').value;
+      const color = document.getElementById('event-color').value;
+      const notes = document.getElementById('event-notes').value.trim();
+      const recurringYearly = document.getElementById('event-recurring').checked;
+
+      if (!title || !dateVal) return;
+
+      if (id) {
+        // Edit existing
+        const index = state.customEvents.findIndex(item => item.id === id);
+        if (index !== -1) {
+          state.customEvents[index] = {
+            ...state.customEvents[index],
+            title,
+            targetDate: new Date(dateVal).toISOString(),
+            category,
+            color,
+            notes,
+            recurringYearly
+          };
+        }
+      } else {
+        // Create new
+        const newEv = {
+          id: `cust_${Date.now()}_${Math.random().toString(36).substr(2, 5)}`,
+          title,
+          targetDate: new Date(dateVal).toISOString(),
+          category,
+          color,
+          notes,
+          recurringYearly,
+          createdAt: new Date().toISOString()
+        };
+        state.customEvents.unshift(newEv);
+      }
+
+      localStorage.setItem(STORAGE_KEY_EVENTS, JSON.stringify(state.customEvents));
+      closeModal('modal-event');
+      renderCountdowns();
+      showToast(getTranslation('eventSaved'), "success");
+    }
+
+    function deleteCustomEvent(id) {
+      if (!confirm("Are you sure you want to delete this countdown event?")) return;
+      state.customEvents = state.customEvents.filter(e => e.id !== id);
+      state.favorites = state.favorites.filter(favId => favId !== id);
+      localStorage.setItem(STORAGE_KEY_EVENTS, JSON.stringify(state.customEvents));
+      localStorage.setItem(STORAGE_KEY_FAVS, JSON.stringify(state.favorites));
+      renderCountdowns();
+      showToast(getTranslation('eventDeleted'), "info");
+    }
+
+    /* ==========================================================================
+       7. SHARE, STATS COPY, AND .ICS CALENDAR EXPORT
+       ========================================================================== */
+    function shareEvent(id) {
+      const all = getAllItems();
+      const item = all.find(i => i.id === id);
+      if (!item) return;
+
+      const target = computeTargetDate(item);
+      const title = item.name || item.title;
+
+      // Encode parameters into URL Hash
+      const hashParams = new URLSearchParams();
+      hashParams.set('event', title);
+      hashParams.set('date', target.toISOString());
+      hashParams.set('cat', item.category || 'custom');
+      hashParams.set('color', item.color || 'sky');
+      if (item.notes) hashParams.set('notes', item.notes);
+
+      const shareUrl = `${window.location.origin}${window.location.pathname}#${hashParams.toString()}`;
+
+      navigator.clipboard.writeText(shareUrl).then(() => {
+        showToast(getTranslation('shareSuccess'), "success");
+      }).catch(() => {
+        prompt("Copy this shareable link:", shareUrl);
+      });
+    }
+
+    function copyEventStats(id) {
+      const all = getAllItems();
+      const item = all.find(i => i.id === id);
+      if (!item) return;
+
+      const target = computeTargetDate(item);
+      const diff = calculateTimeDiff(target);
+      const title = item.name || item.title;
+      const dict = I18N[state.lang] || I18N.en;
+
+      const summaryText = `${item.icon || '⏳'} ${title}\n` +
+        `📅 Target: ${target.toLocaleString()}\n` +
+        `⏱️ ${diff.days} ${dict.days}, ${diff.hours} ${dict.hours}, ${diff.minutes} ${dict.mins}, ${diff.seconds} ${dict.secs} ${diff.isPast ? dict.passed : dict.remaining} (D${diff.isPast ? '+' : '-'}${diff.days})\n` +
+        `Tracked via Global Event & Holiday Countdown Lab`;
+
+      navigator.clipboard.writeText(summaryText).then(() => {
+        showToast(getTranslation('summaryCopied'), "success");
+      });
+    }
+
+    function downloadEventIcs(id) {
+      const all = getAllItems();
+      const item = all.find(i => i.id === id);
+      if (!item) return;
+
+      const target = computeTargetDate(item);
+      const title = item.name || item.title;
+      const notes = item.notes || `Countdown via Global Event & Holiday Countdown Lab`;
+
+      const formatIcsDate = (d) => d.toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, '');
+
+      const icsContent = [
+        'BEGIN:VCALENDAR',
+        'VERSION:2.0',
+        'PRODID:-//Global Event & Holiday Countdown Lab//EN',
+        'CALSCALE:GREGORIAN',
+        'METHOD:PUBLISH',
+        'BEGIN:VEVENT',
+        `UID:${item.id}@countdownlab.app`,
+        `SUMMARY:${title}`,
+        `DESCRIPTION:${notes}`,
+        `DTSTART:${formatIcsDate(target)}`,
+        `DTEND:${formatIcsDate(new Date(target.getTime() + 3600000))}`,
+        'STATUS:CONFIRMED',
+        'END:VEVENT',
+        'END:VCALENDAR'
+      ].join('\r\n');
+
+      const blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `${title.replace(/[^a-zA-Z0-9_-]/g, '_')}.ics`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+
+      showToast(getTranslation('calendarDownloaded'), "success");
+    }
+
+    /* ==========================================================================
+       8. JSON PRESET EXPORT & IMPORT (RULE 15)
+       ========================================================================== */
+    function openExportModal() {
+      const exportData = {
+        app: "Global Event & Holiday Countdown Lab",
+        version: "2.4",
+        exportedAt: new Date().toISOString(),
+        customEvents: state.customEvents,
+        favorites: state.favorites,
+        settings: {
+          lang: state.lang,
+          theme: state.theme
+        }
+      };
+      document.getElementById('json-data-area').value = JSON.stringify(exportData, null, 2);
+      openModal('modal-export');
+    }
+
+    function copyExportJson() {
+      const text = document.getElementById('json-data-area').value;
+      navigator.clipboard.writeText(text).then(() => {
+        showToast("JSON copied to clipboard!", "success");
+      });
+    }
+
+    function downloadJsonFile() {
+      const text = document.getElementById('json-data-area').value;
+      const blob = new Blob([text], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `countdown_lab_backup_${new Date().toISOString().slice(0, 10)}.json`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      showToast("Backup JSON file downloaded!", "success");
+    }
+
+    function importJsonData() {
+      const raw = document.getElementById('json-data-area').value.trim();
+      const isMerge = document.getElementById('import-merge-mode').checked;
+
+      try {
+        const parsed = JSON.parse(raw);
+        const importedEvents = Array.isArray(parsed) ? parsed : (parsed.customEvents || []);
+
+        if (!Array.isArray(importedEvents)) {
+          throw new Error("Invalid format: Expected events array");
+        }
+
+        if (isMerge) {
+          const existingIds = new Set(state.customEvents.map(e => e.id));
+          const toAdd = importedEvents.filter(e => !existingIds.has(e.id));
+          state.customEvents = [...toAdd, ...state.customEvents];
+        } else {
+          state.customEvents = importedEvents;
+        }
+
+        if (parsed.favorites && Array.isArray(parsed.favorites)) {
+          state.favorites = Array.from(new Set([...state.favorites, ...parsed.favorites]));
+        }
+
+        localStorage.setItem(STORAGE_KEY_EVENTS, JSON.stringify(state.customEvents));
+        localStorage.setItem(STORAGE_KEY_FAVS, JSON.stringify(state.favorites));
+
+        closeModal('modal-export');
+        renderCountdowns();
+        showToast(`Successfully imported ${importedEvents.length} events!`, "success");
+      } catch (err) {
+        alert("Failed to parse JSON. Please check data syntax.\n" + err.message);
+      }
+    }
+
+    function loadCuratedPreset(type) {
+      const currentYear = new Date().getFullYear();
+      let presets = [];
+
+      if (type === 'space') {
+        presets = [
+          {
+            id: 'preset_artemis_moon',
+            title: 'NASA Artemis Lunar Mission',
+            targetDate: new Date(currentYear + 1, 8, 15, 12, 0, 0).toISOString(),
+            category: 'milestone',
+            color: 'violet',
+            notes: 'Human return to the lunar surface exploration.'
+          },
+          {
+            id: 'preset_solar_eclipse',
+            title: 'Next Major Total Solar Eclipse',
+            targetDate: new Date(currentYear + 1, 7, 12, 17, 30, 0).toISOString(),
+            category: 'milestone',
+            color: 'amber',
+            notes: 'Spectacular celestial alignment path across Europe & North Africa.'
+          }
+        ];
+      } else if (type === 'sports') {
+        presets = [
+          {
+            id: 'preset_fifa_worldcup',
+            title: 'FIFA World Cup 2026 Opening',
+            targetDate: new Date(2026, 5, 11, 19, 0, 0).toISOString(),
+            category: 'celebration',
+            color: 'emerald',
+            notes: 'Historic 48-nation tournament hosted across USA, Canada, and Mexico.'
+          },
+          {
+            id: 'preset_olympic_games',
+            title: 'Summer Olympic Games Opening Ceremony',
+            targetDate: new Date(2028, 6, 14, 18, 0, 0).toISOString(),
+            category: 'celebration',
+            color: 'sky',
+            notes: 'Los Angeles 2028 Games of the XXXIV Olympiad.'
+          }
+        ];
+      } else if (type === 'goals') {
+        presets = [
+          {
+            id: 'preset_dream_vacation',
+            title: 'Dream Summer Holiday & Roadtrip',
+            targetDate: new Date(Date.now() + 86400000 * 90).toISOString(),
+            category: 'travel',
+            color: 'sky',
+            notes: 'Book flights, finalize itinerary, and pack sunscreen.'
+          },
+          {
+            id: 'preset_exam_deadline',
+            title: 'Key Professional Certification Exam',
+            targetDate: new Date(Date.now() + 86400000 * 30).toISOString(),
+            category: 'exam',
+            color: 'rose',
+            notes: 'Complete mock tests and review core syllabus topics.'
+          }
+        ];
+      }
+
+      state.customEvents = [...presets, ...state.customEvents];
+      localStorage.setItem(STORAGE_KEY_EVENTS, JSON.stringify(state.customEvents));
+      closeModal('modal-export');
+      renderCountdowns();
+      showToast(`Loaded ${presets.length} curated events!`, "success");
+    }
+
+    /* ==========================================================================
+       9. SHAREABLE URL STATE RESTORATION (RULE 12)
+       ========================================================================== */
+    function checkUrlHash() {
+      const hash = window.location.hash;
+      if (!hash || hash.length < 5) return;
+
+      const params = new URLSearchParams(hash.startsWith('#') ? hash.slice(1) : hash);
+      const title = params.get('event');
+      const dateStr = params.get('date');
+
+      if (title && dateStr) {
+        const banner = document.getElementById('shared-banner');
+        document.getElementById('shared-banner-title').textContent = title;
+        document.getElementById('shared-banner-desc').textContent = `is set for ${new Date(dateStr).toLocaleDateString()}`;
+        banner.classList.remove('hidden');
+
+        document.getElementById('shared-banner-save').onclick = () => {
+          const newEv = {
+            id: `shared_${Date.now()}`,
+            title,
+            targetDate: dateStr,
+            category: params.get('cat') || 'custom',
+            color: params.get('color') || 'sky',
+            notes: params.get('notes') || 'Shared from URL link',
+            recurringYearly: false,
+            createdAt: new Date().toISOString()
+          };
+          state.customEvents.unshift(newEv);
+          localStorage.setItem(STORAGE_KEY_EVENTS, JSON.stringify(state.customEvents));
+          banner.classList.add('hidden');
+          window.location.hash = '';
+          renderCountdowns();
+          showToast("Shared event saved to your countdowns!", "success");
+        };
+
+        document.getElementById('shared-banner-close').onclick = () => {
+          banner.classList.add('hidden');
+          window.location.hash = '';
+        };
+      }
+    }
+
+    /* ==========================================================================
+       10. CONFETTI GENERATOR (PURE CANVAS JS, ZERO ASSETS)
+       ========================================================================== */
+    function fireConfetti() {
+      const canvas = document.getElementById('confetti-canvas');
+      const ctx = canvas.getContext('2d');
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+
+      const colors = ['#38bdf8', '#818cf8', '#ec4899', '#f59e0b', '#10b981', '#ffffff'];
+      const particles = [];
+
+      for (let i = 0; i < 90; i++) {
+        particles.push({
+          x: canvas.width * 0.5,
+          y: canvas.height * 0.4,
+          vx: (Math.random() - 0.5) * 16,
+          vy: (Math.random() - 0.7) * 16,
+          size: Math.random() * 8 + 4,
+          color: colors[Math.floor(Math.random() * colors.length)],
+          rotation: Math.random() * 360,
+          rotSpeed: (Math.random() - 0.5) * 10,
+          opacity: 1
+        });
+      }
+
+      let frame = 0;
+      function animate() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        particles.forEach(p => {
+          p.x += p.vx;
+          p.y += p.vy;
+          p.vy += 0.35; // gravity
+          p.rotation += p.rotSpeed;
+          p.opacity -= 0.012;
+
+          ctx.save();
+          ctx.translate(p.x, p.y);
+          ctx.rotate((p.rotation * Math.PI) / 180);
+          ctx.globalAlpha = Math.max(0, p.opacity);
+          ctx.fillStyle = p.color;
+          ctx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size);
+          ctx.restore();
+        });
+
+        frame++;
+        if (frame < 90) {
+          requestAnimationFrame(animate);
+        } else {
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+        }
+      }
+      animate();
+    }
+
+    /* ==========================================================================
+       11. GLOBAL TOAST NOTIFICATION SYSTEM (RULE 16)
+       ========================================================================== */
+    function showToast(message, type = "info") {
+      const container = document.getElementById('toast-container');
+      const toast = document.createElement('div');
+      
+      const typeIcons = { success: '✓', info: 'ℹ', warning: '⚠' };
+      const icon = typeIcons[type] || 'ℹ';
+      const borderColors = {
+        success: 'border-emerald-500/60 bg-emerald-950/90 text-emerald-100',
+        info: 'border-sky-500/60 bg-sky-950/90 text-sky-100',
+        warning: 'border-amber-500/60 bg-amber-950/90 text-amber-100'
+      };
+
+      toast.className = `pointer-events-auto flex items-center gap-2.5 px-4 py-2.5 rounded-xl border backdrop-blur-md shadow-xl text-xs font-medium transition-all transform duration-300 translate-y-2 opacity-0 ${borderColors[type] || borderColors.info}`;
+      toast.innerHTML = `
+        <span class="font-bold text-sm">${icon}</span>
+        <span>${escapeHtml(message)}</span>
+      `;
+
+      container.appendChild(toast);
+
+      requestAnimationFrame(() => {
+        toast.classList.remove('translate-y-2', 'opacity-0');
+      });
+
+      setTimeout(() => {
+        toast.classList.add('opacity-0', 'translate-y-2');
+        setTimeout(() => toast.remove(), 300);
+      }, 3200);
+    }
+
+    /* ==========================================================================
+       12. PWA INSTALLATION LOGIC (RULE 10)
+       ========================================================================== */
+    let deferredPrompt = null;
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      deferredPrompt = e;
+      const installBtn = document.getElementById('pwa-install-btn');
+      if (installBtn) {
+        installBtn.classList.remove('hidden');
+        installBtn.classList.add('flex');
+      }
+    });
+
+    document.getElementById('pwa-install-btn').addEventListener('click', async () => {
+      if (!deferredPrompt) {
+        alert("To install this app on your device:\n• iOS: Tap Share -> 'Add to Home Screen'\n• Desktop: Click the install icon in your browser address bar.");
+        return;
+      }
+      deferredPrompt.prompt();
+      const { outcome } = await deferredPrompt.userChoice;
+      if (outcome === 'accepted') {
+        showToast("App installed successfully!", "success");
+        document.getElementById('pwa-install-btn').classList.add('hidden');
+      }
+      deferredPrompt = null;
+    });
+
+    // Register Service Worker if supported
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/sw.js').catch(() => {});
+    }
+
+    /* ==========================================================================
+       13. KEYBOARD SHORTCUTS & ACCESSIBILITY (RULE 8)
+       ========================================================================== */
+    window.addEventListener('keydown', (e) => {
+      // Avoid firing shortcuts when typing in inputs/textareas
+      const tag = document.activeElement ? document.activeElement.tagName.toLowerCase() : '';
+      if (tag === 'input' || tag === 'textarea' || tag === 'select') {
+        if (e.key === 'Escape') document.activeElement.blur();
+        return;
+      }
+
+      if (e.key === 'n' || e.key === 'N') {
+        e.preventDefault();
+        openCreateModal();
+      } else if (e.key === '/') {
+        e.preventDefault();
+        document.getElementById('event-search-input').focus();
+      } else if (e.key === 't' || e.key === 'T') {
+        e.preventDefault();
+        cycleTheme();
+      } else if (e.key === 'v' || e.key === 'V') {
+        e.preventDefault();
+        toggleViewMode();
+      } else if (e.key === 'c' || e.key === 'C') {
+        e.preventDefault();
+        fireConfetti();
+      } else if (e.key === '?') {
+        e.preventDefault();
+        openModal('modal-shortcuts');
+      } else if (e.key === 'Escape') {
+        closeAllModals();
+      }
+    });
+
+    function cycleTheme() {
+      const themes = ['dark', 'light', 'aurora', 'holiday', 'cyberpunk', 'sunset'];
+      const nextIdx = (themes.indexOf(state.theme) + 1) % themes.length;
+      state.theme = themes[nextIdx];
+      localStorage.setItem(STORAGE_KEY_THEME, state.theme);
+      applyTheme();
+      showToast(`Theme: ${state.theme.toUpperCase()}`, "info");
+    }
+
+    function toggleViewMode() {
+      state.viewMode = state.viewMode === 'grid' ? 'compact' : 'grid';
+      localStorage.setItem(STORAGE_KEY_VIEW, state.viewMode);
+      document.getElementById('view-mode-icon').textContent = state.viewMode === 'grid' ? '⊞' : '☰';
+      renderCountdowns();
+    }
+
+    /* ==========================================================================
+       14. AD SLOT TOGGLE & FEEDBACK MODAL (RULES 14, 17)
+       ========================================================================== */
+    function toggleAdPlaceholder() {
+      const ad = document.getElementById('ad-slot-section');
+      ad.classList.toggle('opacity-30');
+      showToast("Ad placeholder toggled", "info");
+    }
+
+    function openFeedbackModal() {
+      openModal('modal-feedback');
+    }
+
+    function submitFeedback(e) {
+      e.preventDefault();
+      const type = document.getElementById('fb-type').value;
+      const comment = document.getElementById('fb-comment').value;
+      closeModal('modal-feedback');
+      showToast("Thank you for your feedback! It helps improve Countdown Lab.", "success");
+      document.getElementById('fb-comment').value = '';
+    }
+
+    function resetToDefaults() {
+      if (!confirm("Reset all custom events and favorites back to defaults?")) return;
+      localStorage.clear();
+      location.reload();
+    }
+
+    /* ==========================================================================
+       15. MODAL UTILITIES & EVENT LISTENERS
+       ========================================================================== */
+    function openModal(id) {
+      const el = document.getElementById(id);
+      if (el) {
+        el.classList.remove('hidden');
+        el.classList.add('flex');
+      }
+    }
+
+    function closeModal(id) {
+      const el = document.getElementById(id);
+      if (el) {
+        el.classList.remove('flex');
+        el.classList.add('hidden');
+      }
+    }
+
+    function closeAllModals() {
+      ['modal-event', 'modal-export', 'modal-feedback', 'modal-shortcuts'].forEach(closeModal);
+    }
+
+    function scrollToTop() {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function pad(n) {
+      return String(n).padStart(2, '0');
+    }
+
+    function escapeHtml(str) {
+      if (!str) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+
+    /* ==========================================================================
+       16. INITIALIZATION
+       ========================================================================== */
+    window.addEventListener('DOMContentLoaded', () => {
+      // Detect and display user timezone
+      try {
+        const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+        document.getElementById('footer-tz-display').textContent = tz;
+      } catch (e) {}
+
+      // Language Select Event
+      document.getElementById('lang-select').addEventListener('change', (e) => {
+        state.lang = e.target.value;
+        localStorage.setItem(STORAGE_KEY_LANG, state.lang);
+        applyLanguage();
+      });
+
+      // Theme Select Event
+      document.getElementById('theme-select').addEventListener('change', (e) => {
+        state.theme = e.target.value;
+        localStorage.setItem(STORAGE_KEY_THEME, state.theme);
+        applyTheme();
+      });
+
+      // Search Filter Input
+      document.getElementById('event-search-input').addEventListener('input', (e) => {
+        state.searchQuery = e.target.value;
+        renderCountdowns();
+      });
+
+      // Category Tabs
+      document.querySelectorAll('.filter-tab').forEach(tab => {
+        tab.addEventListener('click', () => {
+          document.querySelectorAll('.filter-tab').forEach(t => {
+            t.className = "filter-tab px-3 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition bg-gray-800/60 text-gray-300 hover:bg-gray-700/60";
+          });
+          tab.className = "filter-tab px-3 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition bg-sky-500 text-slate-950 shadow-sm";
+          state.activeCategory = tab.getAttribute('data-category');
+          renderCountdowns();
+        });
+      });
+
+      // Buttons
+      document.getElementById('btn-open-create-modal').addEventListener('click', openCreateModal);
+      document.getElementById('btn-toggle-view').addEventListener('click', toggleViewMode);
+      document.getElementById('btn-open-export-modal').addEventListener('click', openExportModal);
+      document.getElementById('btn-shortcuts-help').addEventListener('click', () => openModal('modal-shortcuts'));
+
+      // Apply initial theme & language
+      applyTheme();
+      applyLanguage();
+
+      // Check URL Hash for shared events
+      checkUrlHash();
+
+      // Live Ticker loop: 50ms for smooth millisecond & second sync
+      setInterval(updateLiveCounters, 50);
+    });
+  </script>
+</body>
+</html>

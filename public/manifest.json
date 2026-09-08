@@ -1,0 +1,20 @@
+{
+  "id": "/",
+  "name": "Global Event & Holiday Countdown Lab",
+  "short_name": "CountdownLab",
+  "description": "Real-time global holiday and custom D-Day countdown lab with 20-language i18n and event sharing.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "theme_color": "#0f172a",
+  "background_color": "#0f172a",
+  "icons": [
+    {
+      "src": "/icon.svg",
+      "sizes": "192x192 512x512",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}
